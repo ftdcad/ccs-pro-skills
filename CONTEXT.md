@@ -19,7 +19,7 @@ Full 90-day lifecycle. Steps marked with * are placeholders (no prompt/rules yet
 | 4c | Loss Below PRO | Post-Strategy (branch) | **DONE** — patched with ITELL + visual continuity rules | 06-loss-below-pro/ |
 | — | **State PRO** | Post-branch (orchestrator) | **DONE** — skill spec + DOI reference | prompts/support/state-pro/state-pro.md |
 | 5 | UnDisputed Funds PRO | Day 4-5 | **DONE** — full patched spec saved | 07-undisputed-funds-pro/ |
-| 6 | SPOL PRO | Day 4-5 | GAP — folder empty | 08-spol-pro/ |
+| 6 | SPOL PRO | Day 4-5 | **DONE** — with insured email template | 08-spol-pro/ |
 | 7 | 15 Day PRO | Day 5-6 | GAP — folder empty | 09-15-day-pro/ |
 | 8 | Formal Demand PRO | Day 5-10 | GAP — folder empty | 10-formal-demand-pro/ |
 | 9 | 30 Day PRO | Day 16-28 | GAP — folder empty | 11-30-day-pro/ |
@@ -35,6 +35,20 @@ Full 90-day lifecycle. Steps marked with * are placeholders (no prompt/rules yet
 **Branching after Strategy PRO:** Strategy PRO reads all prior reports + the estimate, asks questions, and determines which path the claim takes — Denial, New Claim, or Loss Below. All three paths converge at **State PRO**, which confirms state-specific statutes and deadlines before any correspondence is generated.
 
 **End state at 90 days:** Claim is either resolved, in full litigation, or in alternative dispute resolution (ADR).
+
+### Conditional / Position-Independent Tools
+
+These are NOT numbered pipeline steps. They fire on demand when triggered by specific events, regardless of where the claim currently sits in the chain.
+
+| Tool | Trigger | Folder |
+|------|---------|--------|
+| **RFI Pro** | Carrier sends a Request for Information (RFI). Also triggers on Reservation of Rights (ROR) letters — RFIs are frequently embedded inside ROR language. | prompts/support/rfi-pro/ |
+| **State PRO** | Called by any downstream PRO before correspondence. Position-independent orchestrator. | prompts/support/state-pro/ |
+
+**RFI Pro — Critical Notes:**
+- When an RFI arrives, it becomes the MOST URGENT thing on the file — jumps to front of queue regardless of current pipeline position
+- RFIs are frequently hidden inside Reservation of Rights (ROR) letters. The carrier sends one letter that is simultaneously an ROR AND an RFI. Adjusters see "Reservation of Rights" and think coverage fight — they miss the document requests buried on page 3. The insured never responds. Claim gets denied not on coverage but on cooperation.
+- **Dual-route rule for ROR letters:** If an RFI is found inside an ROR, flag both: route the ROR to Strategy Pro for coverage position analysis AND run RFI Pro on the embedded requests simultaneously. Two separate responses to the same letter.
 
 ## Architecture Decision: Context Engineering (Feb 23, 2026)
 
