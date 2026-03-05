@@ -185,7 +185,13 @@ List any disputed items being reserved for separate escalation. This demand is f
 
 **📧 COMMUNICATION TEMPLATES**
 
-Three communications. They go out in this exact order. Do not skip steps. Do not reverse the sequence. Each one is explained so you understand what it accomplishes — this is not a copy-paste exercise.
+Two emails and one letter. The letter is an attachment to the second email — it is not a separate send. In this exact order:
+
+- **Email 1** → To insured, CC contractor/referral source — send BEFORE anything goes to the carrier
+- **Email 2** → To carrier, CC insured — send second, with the demand letter attached
+- **The Letter** → Document 2 — formal demand letter, generated separately, attached to Email 2. Not a third email.
+
+Each has a coaching note explaining what it accomplishes and what breaks if you skip it.
 
 ---
 
@@ -196,7 +202,7 @@ Skipping the insured email is the most common mistake adjusters make at this sta
 
 ---
 
-**TEMPLATE 1 — Email to Insured (send this BEFORE anything goes to the carrier)**
+**EMAIL 1 — To Insured, CC Contractor/Referral Source (send BEFORE carrier gets anything)**
 
 *Why: The insured needs to know what you're doing and why before the carrier gets the demand. This prevents confusion, builds trust, and keeps your referral source informed. CC the contractor so they're not left wondering either.*
 
@@ -222,7 +228,7 @@ I will update you as soon as we hear back.
 
 ---
 
-**TEMPLATE 2 — Email to Carrier (send after Template 1, CC the insured)**
+**EMAIL 2 — To Carrier, CC Insured (demand letter attached)**
 
 *Why: This is the professional delivery of the demand letter. Tone is firm but not combative — you are not accusing them of bad faith yet, you are giving them the opportunity to do the right thing. The insured is copied so the carrier knows your client is aware of every communication. The demand letter is attached.*
 
@@ -252,7 +258,7 @@ Attachments:
 
 ---
 
-**TEMPLATE 3 — Demand Letter (this is Document 2 — attached to Template 2)**
+**THE LETTER — Formal Demand (attached to Email 2, this is Document 2)**
 
 *Why: The formal letter is the legal instrument. The email delivers it. Together they establish the demand on the record. The protective language below is non-negotiable — it prevents the carrier from treating this demand as a settlement figure or using your number to cap the claim.*
 
