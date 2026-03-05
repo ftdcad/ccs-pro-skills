@@ -1,0 +1,227 @@
+{
+  "meta": {
+    "claimNumber": "01-000125628",
+    "lastName": "Armstrong",
+    "generatedDate": "2026-03-04"
+  },
+  "claim": {
+    "insured": "Dale Armstrong",
+    "address": "836 E 20th Ave, New Smyrna Beach FL 32168",
+    "carrier": "Frontline / First Protective Ins. Co.",
+    "policyNumber": "7756322514",
+    "claimNumber": "01-000125628",
+    "dateOfLoss": "10/10/2024 — Hurricane Milton",
+    "policyType": "Dwelling Fire (DP 00 03)",
+    "fileStatus": "CTG — Supplemental"
+  },
+  "pros": {
+    "policy": {
+      "status": "complete",
+      "coverage": {
+        "A": "$269,080",
+        "B": "$26,908",
+        "C": "$6,727",
+        "D": "$26,908",
+        "hurricaneDeductible": "2% Cov A = $5,382",
+        "aopDeductible": "$2,500",
+        "lossSettlement": "Replacement Cost (A, B, C)",
+        "appraisalClause": "Present — DP 00 03 07 88"
+      },
+      "underwriting": {
+        "yearBuilt": "1985",
+        "sqFootage": "990 SF",
+        "roofYear": "2006 (18 yrs at DOL)",
+        "roofType": "Architectural",
+        "construction": "Masonry",
+        "occupancy": { "value": "Tenant Occupied", "flag": "warn" },
+        "county": "Volusia — 062",
+        "policyPeriod": "07/09/2024 – 07/09/2025"
+      },
+      "mortgagees": [
+        { "label": "1st Mortgage", "value": "PNWBX LLC · Loan #579767923 · Escrowed" },
+        { "label": "2nd Mortgage", "value": "Loan #00000083486960 · Not Escrowed · Name not on DEC" },
+        { "label": "Additional Interest", "value": "USA Federal Savings Bank ISAOA/ATIMA · Fort Worth TX" }
+      ],
+      "flags": [
+        {
+          "variant": "red",
+          "content": "🚨 OCCUPANCY CONFLICT — Property is Tenant Occupied per underwriting, but policy carries endorsement DL 24 16 07 88 — No Coverage for Non-Owner Occupied Dwellings. PA and management review required before strategy. Carrier already probing this via SPOL item 4 (changes in occupancy)."
+        },
+        {
+          "variant": "red",
+          "content": "🚨 CALENDAR YEAR HURRICANE DEDUCTIBLE (DP 03 51 05 23) — Supplemental reporting requirement applies in Florida. Confirm whether any prior 2024 hurricane claim was filed. If already satisfied, deductible may be $0. If not, full $5,382 applies."
+        },
+        {
+          "variant": "yellow",
+          "content": "⚠ EXISTING DAMAGE EXCLUSION (FIM 00 30 03 07) — Carrier explicitly requesting separation of pre-loss vs. post-loss damage in document request item 3. Photo documentation of storm-specific damage is critical."
+        },
+        {
+          "variant": "yellow",
+          "content": "⚠ COSMETIC/AESTHETIC DAMAGE TO FLOORS (FIM 00 34 06 13) — Floor damage that is purely cosmetic may be excluded. Confirm functional damage if floors are added to scope."
+        },
+        {
+          "variant": "yellow",
+          "content": "⚠ SCREEN ENCLOSURE HURRICANE LIMITATION (FIM 00 18 12 23) — Verify at inspection whether a screen enclosure is present. Coverage limited if so."
+        },
+        {
+          "variant": "blue",
+          "content": "ℹ ROOF AGE — 2006 roof, 18 years at date of loss. Depreciation applies. No roof payment schedule endorsement confirmed — carrier is on RCV basis per FIM DP 66 01 16."
+        }
+      ],
+      "endorsements": {
+        "critical": [
+          "No Coverage for Non-Owner Occupied Dwellings (DL 24 16 07 88)"
+        ],
+        "warn": [
+          "Calendar Year Hurricane Deductible w/ Supplemental Reporting (DP 03 51 05 23)",
+          "Existing Damage Exclusion (FIM 00 30 03 07)",
+          "Screen Enclosure Hurricane Limitation (FIM 00 18 12 23)",
+          "Cosmetic & Aesthetic Damage to Floors Limitation (FIM 00 34 06 13)"
+        ],
+        "standard": [
+          "Limited Fungi / Wet or Dry Rot / Bacteria Coverage (FIM 00 11 06 07)",
+          "Decision Property Replacement Cost (FIM DP 66 01 16)",
+          "Water Back Up and Sump Overflow (FIM DP 95 01 16)",
+          "Personal Liability (DL 24 01 07 88)",
+          "Premises Liability — Owner Occupied Dwelling (DL 24 11 07 88)",
+          "Animal Liability Exclusion (FIM 04 01 06 03)",
+          "Catastrophic Ground Cover Collapse (FIM 00 39 10 11)",
+          "Sinkhole Exclusion — Florida (FIM SEN 01 12)",
+          "No Coverage — Tree Roots / Organic Debris (FIM 00 50 10 15)",
+          "Special Provisions Liability Florida (FIM FL DL 22 12 16)"
+        ]
+      },
+      "missing": [
+        "Full policy jacket — Duties After Loss, EUO, Suit Against Us",
+        "Full text of all listed endorsements — especially DL 24 16 07 88",
+        "2nd Mortgage holder name — not on DEC page",
+        "Matching endorsement status — not confirmed",
+        "Confirmation of prior 2024 hurricane claims — calendar year deductible check"
+      ],
+      "handoff": {
+        "to": "Scope PRO",
+        "content": "Hurricane deductible confirmed: $5,382. Occupancy conflict flagged — PA review required before Strategy PRO. All coverage data carried forward. No re-entry needed downstream."
+      }
+    },
+    "scope": {
+      "status": "complete",
+      "subtitle": "75 photos analyzed · No EagleView · Hip roof · Hurricane Milton",
+      "measurements": {
+        "netArea": "23.42 SQ (2,342 SF)",
+        "recommendedSQ": { "value": "26.93 SQ (23.42 + 15% hip waste)", "highlight": true },
+        "pitch": "5/12",
+        "configuration": "Hip — 4 facets",
+        "ridge": "32.33 LF",
+        "perimeter": "~199 LF"
+      },
+      "roofExterior": [
+        { "item": "Shingle Replacement", "description": "Full roof — 25 chalk hits: F(11) R(5) B(5) L(4). Arch. asphalt. No EagleView — 15% hip waste applied.", "qty": "26.93 SQ" },
+        { "item": "Aluminum Ridge Vent", "description": "Continuous — photos #13, #14. R&R with roof.", "qty": "Per LF" },
+        { "item": "Turtle Vent", "description": "1 unit — photos #13, #18. R&R with roof.", "qty": "1 EA" },
+        { "item": "Pipe Jacks", "description": "4 units — chalk annotation confirmed — photos #14–#19.", "qty": "4 EA" },
+        { "item": "Electric Mast Boot", "description": "Weatherhead / service mast — photo #29. R&R with roof.", "qty": "1 EA" },
+        { "item": "Gutters — Aluminum", "description": "White aluminum, full perimeter — photos #3–#11. R&R.", "qty": "~199 LF" }
+      ],
+      "interior": [
+        {
+          "room": "Bedroom 3",
+          "source": "Water stain ring — photo #75",
+          "items": [
+            "R&R drywall ceiling (verify drywall vs. plaster in field)",
+            "R&R attic insulation (same SF)",
+            "Texture ceiling — full room",
+            "Paint ceiling — full room"
+          ],
+          "sf": "Field measure"
+        },
+        {
+          "room": "Master Bedroom",
+          "source": "Ceiling staining — photos #50–#52",
+          "items": [
+            "R&R drywall ceiling (verify drywall vs. plaster in field)",
+            "R&R attic insulation (same SF)",
+            "Texture ceiling — full room",
+            "Paint ceiling — full room"
+          ],
+          "sf": "Field measure"
+        }
+      ],
+      "severity": {
+        "level": "Severity 2",
+        "description": "Light/Moderate | Habitable"
+      },
+      "flags": [
+        { "variant": "green", "content": "✓ Functional damage confirmed — 25 documented impacts across all 4 slopes. Hurricane Milton 10/10/2024." },
+        { "variant": "green", "content": "✓ Above deductible — Hurricane deductible $5,382 confirmed. Scope supports recovery above threshold." },
+        { "variant": "red", "content": "🚨 PA REVIEW REQUIRED — Occupancy conflict from Policy PRO must be resolved before strategy. Carrier has DL 24 16 07 88 on file and is actively probing via SPOL." },
+        { "variant": "yellow", "content": "⚠ Drywall vs. plaster not confirmed — verify in field before estimating interior." },
+        { "variant": "yellow", "content": "⚠ Moisture testing recommended — Bedroom 3 prior to estimate finalization." }
+      ],
+      "notes": [
+        "Back porch metal roof — present, no damage observed.",
+        "75 photos analyzed.",
+        "No screen enclosure visible — Screen Enclosure Limitation likely not triggered.",
+        "No floor damage observed — Cosmetic Floors endorsement not triggered."
+      ],
+      "agenticNotes": "No additional observations.",
+      "handoff": {
+        "to": "Estimating",
+        "content": "26.93 SQ recommended. 2 interior rooms need field SF. Drywall/plaster confirmation needed before pricing interior. PA must resolve occupancy conflict before Strategy PRO proceeds."
+      }
+    },
+    "strategy": {
+      "status": "complete",
+      "subtitle": "New Claim — Active Document Request",
+      "carrierContact": {
+        "adjuster": "Brittany Nicole Stanley",
+        "title": "CAT Claims Adjuster",
+        "carrier": "Frontline Insurance",
+        "license": "FL W438671",
+        "phone": "(877) 744-5224 ext. 1266"
+      },
+      "routing": "New Claim — Active Investigation",
+      "carrierLetterDate": "August 1, 2025",
+      "carrierLetterReceived": "August 8, 2025",
+      "flags": [
+        { "variant": "red", "content": "🚨 OCCUPANCY PROBE — Carrier SPOL item 4 explicitly requests 'changes in title or occupancy during the term of the policy.' This is not coincidental. Occupancy conflict must be resolved with PA and management before responding." },
+        { "variant": "red", "content": "🚨 SWORN PROOF OF LOSS DEADLINE — SPOL due within 60 days of August 1, 2025. Hard deadline: approximately October 1, 2025. Do not miss this." },
+        { "variant": "yellow", "content": "⚠ EXISTING DAMAGE SEPARATION — Carrier item 3 demands separation of pre-loss vs. post-loss damage. Prepare documentation that isolates Hurricane Milton damage from any pre-existing wear." },
+        { "variant": "yellow", "content": "⚠ CONTRACTOR LIST REQUIRED — Carrier item 2 requests all contractors, salespersons, or trade individuals who have worked on or discussed this loss. Compile before responding." },
+        { "variant": "blue", "content": "ℹ Carrier acknowledged receipt of CCS estimate and photos submitted July 28, 2025. File is active — not denied, not below deductible." }
+      ],
+      "spolChecklist": [
+        "All photographs, images, statements, text messages, emails, estimates, job quotes, invoices, receipts",
+        "List of all contractors and trade individuals who worked on or discussed the loss",
+        "Detailed statement of damages separating pre-loss from post-loss",
+        "Detailed estimate of anticipated repair expenses",
+        "Pre-sale inspection report (if purchased within last 5 years)",
+        "Any additional supporting documentation",
+        "Completed, fully executed, signed, notarized Sworn Proof of Loss"
+      ],
+      "peerReview": false,
+      "handoff": {
+        "to": "UnDisputed Funds PRO",
+        "content": "Claim is active. SPOL deadline ~Oct 1 2025. Occupancy conflict must be addressed before any carrier response. Routing: New Claim track."
+      }
+    },
+    "estimating": {
+      "status": "complete",
+      "subtitle": "Estimate submitted to carrier July 28, 2025",
+      "content": "Estimate submitted to carrier July 28, 2025. Carrier has acknowledged receipt. Xactimate line items pending population in this section."
+    },
+    "undisputed": { "status": "pending" },
+    "denial": { "status": "pending" },
+    "newClaim": { "status": "pending" },
+    "lossBelow": { "status": "pending" },
+    "spol": { "status": "pending" },
+    "day15": { "status": "pending" },
+    "formalDemand": { "status": "pending" },
+    "day30": { "status": "pending" },
+    "day45": { "status": "pending" },
+    "peerReview1": { "status": "pending" },
+    "day60": { "status": "pending" },
+    "day75": { "status": "pending" },
+    "peerReview2": { "status": "pending" },
+    "day90": { "status": "pending" }
+  }
+}
