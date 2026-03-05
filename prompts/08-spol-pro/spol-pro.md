@@ -151,6 +151,50 @@ Days remaining: [Calculate]
 
 ---
 
+**📧 EMAIL TO INSURED — Send with the draft attached (CC contractor/referral source)**
+
+*Why this email matters: The insured does not understand what a sworn proof of loss is or why it controls everything. Without this email, they treat it like junk mail. With it, they understand that their claim cannot move — at all — until this comes back signed. The hot potato is now in their hands. Your job is to make that crystal clear without scaring them.*
+
+---
+
+To: [Insured Email]
+CC: [Contractor/Referral Source Email]
+Subject: [Claim #] – [Property Address] | Action Required — Your Claim Is On Hold
+
+[Insured First Name],
+
+I have attached a document called a Sworn Proof of Loss. This is a standard form required by your insurance policy, and I want to be direct with you about what it means for your claim:
+
+**Your claim cannot move forward until this form is completed, signed, and returned to us.**
+
+Not one dollar can be released. Not one next step can be taken. Everything is on hold until we have this back from you.
+
+The good news — I have already pre-filled everything I can from your policy and our estimate. All you need to do is review it, complete the few fields marked [NOT provided], sign it, and send it back to me.
+
+Here is exactly what I need you to do:
+
+1. Open the attached document
+2. Review the information for accuracy
+3. Complete any fields marked [NOT PROVIDED] — these require information only you have
+4. Sign where indicated
+5. Return it to me at [email] or [fax/upload instructions]
+
+Please return this to me within [X] days. The sooner this comes back, the sooner your claim moves forward.
+
+If you have any questions about what a field is asking for, call me directly at [phone]. Do not guess — just call me and I will walk you through it in five minutes.
+
+I know this feels like paperwork, and I am sorry for the extra step. But this is a legal requirement of your policy and it is the one thing standing between where we are now and getting your claim resolved. Let us get it done.
+
+[PA Name]
+[Phone] | [Email]
+[License Number]
+
+---
+
+*Adjuster coaching note: The tone is urgent but not threatening. You are not telling them the claim will be denied — you are telling them nothing moves until this comes back. That is accurate and it creates action without panic. If they do not respond within 48 hours, follow up by phone. Do not wait. A stalled SPOL is a stalled claim.*
+
+---
+
 **🔄 NEXT STEPS FOR ADJUSTER**
 
 1. Review extracted data for accuracy
