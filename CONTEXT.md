@@ -81,7 +81,7 @@ These are NOT numbered pipeline steps. They fire on demand when triggered by spe
 
 ### Build order
 1. Design conversations — nail down each step (IN PROGRESS)
-2. Clean up each PRO tool prompt into a skill file (7 of ~13 DONE as of Mar 4)
+2. Clean up each PRO tool prompt into a skill file (10 DONE as of Mar 4 — 8 linear + 2 support)
 3. Build the orchestrator MD LAST (depends on knowing all final steps)
 
 ## How GPTs Worked (Reference)
@@ -143,7 +143,7 @@ These are NOT numbered pipeline steps. They fire on demand when triggered by spe
 ## Session Log
 - **Feb 23, 2026 (Session 1)**: Project started. Read all 40 files from AI Prompts folder. Mapped every file to its PRO step. Identified 3 gaps (Claims AI intake, Formal Demand PRO, 30 Day PRO). Set up folder structure. Ran head-to-head Policy Pro test (GPT vs Claude). Decision: Claude API.
 - **Feb 23, 2026 (Session 2 — GSD Init)**: Deep design conversation. Established context engineering approach (not prompt engineering). Defined cumulative report pattern, orchestrator + skills architecture, build order (skills first, orchestrator last). Updated pipeline to full 90-day lifecycle (17 steps including 45/60/75/90 Day PRO + 2 peer review checkpoints). Saved all reference screenshots. Steps are still fluid — chart will evolve. Next: start working through each step, cleaning up prompts into skills.
-- **Mar 4, 2026 (Session 3 — Skill File Consolidation)**: Major session. Populated 7 skill spec files from multiple sources (conversation drafts, Desktop Pro 90 master folder, .skill ZIP archives). State PRO hybrid architecture decided (Layer 1 = hardcoded core state facts, Layer 2 = web search fallback). DOI Reference Index for all 50 states created and appended to State PRO. Merlin Law Group state guides extracted to data/state-reference/ (13 state files + matching chart). Undisputed Funds Pro spec reviewed with feedback but NOT saved to disk. See details below.
+- **Mar 4, 2026 (Session 3 — Skill File Consolidation)**: Major session. Consolidated all skill specs into canonical project structure. Started with 7 from multiple sources (conversation drafts, Desktop Pro 90 master folder, .skill ZIP archives). Then added Undisputed Funds Pro (with communication templates — 2 emails + 1 attached letter), SPOL Pro (with insured email template), and RFI Pro (conditional/position-independent, ROR detection rule). State PRO hybrid architecture decided. DOI Reference Index for all 50 states. Merlin Law Group state guides extracted. 10 total skill specs on disk (8 linear chain + 2 support). 6 git commits made. See details below.
 
 ## Mar 4 Session Details
 
@@ -159,6 +159,9 @@ These are NOT numbered pipeline steps. They fire on demand when triggered by spe
 | `prompts/support/state-pro/state-pro.md` | Conversation draft from Frank | Full skill spec + DOI Reference Index appended. TX production-ready, others web search fallback. |
 | `data/state-reference/STATE-DOI-REFERENCE.md` | Conversation draft from Frank | All 50 states + DC — DOI websites, PA licensing status, high-priority states |
 | `data/state-reference/TX/` | Created empty | Placeholder for TX JSON files |
+| `prompts/07-undisputed-funds-pro/undisputed-funds-pro.md` | Conversation draft from Frank (3 revisions) | Two-doc workflow (Strategic Analysis + Demand Letter). Communication templates: 2 emails + 1 attached letter. Citation tone fix, 10-day default, cumulative report rule, protective language checklist. |
+| `prompts/08-spol-pro/spol-pro.md` | Conversation draft from Frank (2 revisions) | Sworn proof of loss prep. [NOT PROVIDED] pattern for missing data. 24hr delivery rule. Insured email with hot potato framing. |
+| `prompts/support/rfi-pro/rfi-pro.md` | Conversation draft from Frank | Conditional/position-independent. ROR detection rule (scan every ROR for embedded RFIs). Dual-route: ROR to Strategy Pro + RFI Pro simultaneously. Escalation flags for 2nd/3rd requests. |
 
 ### State PRO Architecture (Decided Mar 4)
 - **Hybrid model**: Layer 1 = hardcoded core facts for top states. Layer 2 = web search for all others, flagged "verify before acting."
@@ -181,11 +184,9 @@ Know the law, never cite it. No statute numbers or case law in correspondence se
 - All needed files imported to project — duplicates flagged for cleanup but NOT deleted
 
 ### What's NOT Done Yet
-1. ~~Undisputed Funds Pro~~ — DONE (saved Mar 4)
-2. **TX JSON files** — `TX_carrier_obligations.json` and `TX_pa_compliance.json` referenced by state-pro.md but not created (data exists inline in the .md)
-3. **Duplicate DOI Reference** — exists as both standalone file AND appended to state-pro.md (decide which to keep)
-4. **Empty prompt folders**: 00-universal-core-rules/, 07-undisputed-funds-pro/, 08-spol-pro/, 09-15-day-pro/, 10-formal-demand-pro/, 11-30-day-pro/
-5. **Desktop Pro 90 master cleanup** — duplicates not deleted
-6. **Git commit** — NO commits made this session, all work is uncommitted
-7. **State reference web search gaps** — some Merlin extraction fields flagged "web search required" across state files
-8. **CLAUDE.md** — still shows old pipeline status, needs update to match CONTEXT.md
+1. **TX JSON files** — `TX_carrier_obligations.json` and `TX_pa_compliance.json` referenced by state-pro.md but not created (data exists inline in the .md)
+2. **Duplicate DOI Reference** — exists as both standalone `data/state-reference/STATE-DOI-REFERENCE.md` AND appended to `prompts/support/state-pro/state-pro.md` (intentionally — skill = behavior, data file = lookup table)
+3. **Empty prompt folders**: 00-universal-core-rules/, 09-15-day-pro/, 10-formal-demand-pro/, 11-30-day-pro/
+4. **Desktop Pro 90 master cleanup** — ~10 duplicate files not deleted
+5. **State reference web search gaps** — some Merlin extraction fields flagged "web search required" across state files
+6. **Remaining skill specs**: 15 Day Pro, Formal Demand Pro, 30 Day Pro, and 45/60/75/90 Day interval specs
