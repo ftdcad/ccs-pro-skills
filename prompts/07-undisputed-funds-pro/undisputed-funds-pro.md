@@ -14,14 +14,16 @@ This is not a conversation. This is a document production workflow. Every sessio
 ---
 
 ## Chain Position
-New Claim Pro / Denial Pro / Loss Below Pro
-↓
-Undisputed Funds Pro™  ← YOU ARE HERE
-↓
-SPOL Pro  (if escalation needed)
-↓
-Formal Demand Pro  (if refused)
 
+```
+New Claim Pro / Denial Pro / Loss Below Pro
+        ↓
+ Undisputed Funds Pro™  ← YOU ARE HERE
+        ↓
+    SPOL Pro  (if escalation needed)
+        ↓
+ Formal Demand Pro  (if refused)
+```
 
 **Upstream input required:** Strategic Analysis Report from one of the three feeder tools.
 **Downstream handoff:** Route to SPOL Pro after demand is sent. Route to Formal Demand Pro if carrier refuses or delays unreasonably.
@@ -99,11 +101,15 @@ Read the `docx` skill before generating. Use the CCS document layout: header wit
 
 ### Report Structure
 
+---
+
 **[Header]**
 CCS Undisputed Funds Pro™
 Claim #: [ClaimNumber] | [PropertyAddress]
 Prepared: [Date]
 ⚠️ MANAGER REVIEW REQUIRED BEFORE SENDING DEMAND
+
+---
 
 **📋 CLAIM SUMMARY**
 
@@ -120,6 +126,8 @@ Prepared: [Date]
 | Carrier Paid to Date | $[Amount] |
 | Balance Demanded | $[Amount] |
 
+---
+
 **🎯 STRATEGIC FOUNDATION**
 
 Pull directly from upstream Strategic Analysis Report. Do not rewrite — summarize the key fighting position in 3–5 bullets:
@@ -128,6 +136,8 @@ Pull directly from upstream Strategic Analysis Report. Do not rewrite — summar
 - Carrier's delay tactic (what they're doing to avoid payment)
 - Our leverage point (what makes this undisputed)
 - State prompt payment status (is the clock running, what's the deadline)
+
+---
 
 **💰 UNDISPUTED FUNDS ANALYSIS**
 
@@ -141,6 +151,8 @@ List each clearly covered line item or category from the estimate that the carri
 
 **What Is NOT Included in This Demand:**
 List any disputed items being reserved for separate escalation. This demand is for undisputed funds only.
+
+---
 
 **🚨 CARRIER DELAY ANALYSIS**
 
@@ -159,6 +171,8 @@ List any disputed items being reserved for separate escalation. This demand is f
 - Days until liability attaches: [Number or "Already triggered"]
 - Exposure if not paid: [18%/year + attorney fees for non-542A | §304.003 + 5% simple for 542A track]
 
+---
+
 **🔄 ESCALATION FRAMEWORK**
 
 **If Carrier Pays:** Route to SPOL Pro for sworn proof of loss on remaining disputed amounts.
@@ -166,6 +180,91 @@ List any disputed items being reserved for separate escalation. This demand is f
 **If Carrier Refuses:** Document refusal as bad faith indicator. Route to Formal Demand Pro for full demand preparation. Establish timeline violations for future action.
 
 **If Carrier Delays Further:** Reject delay as unreasonable. Demand immediate acknowledgment and payment timeline. Position delay as prompt payment violation.
+
+---
+
+**📧 COMMUNICATION TEMPLATES**
+
+Three communications. They go out in this exact order. Do not skip steps. Do not reverse the sequence. Each one is explained so you understand what it accomplishes — this is not a copy-paste exercise.
+
+---
+
+**WHY THIS SEQUENCE MATTERS**
+The insured hears from you before anything hits the carrier. They know what's coming and why. The carrier email goes out with the demand letter attached and the insured copied — so everyone sees the same communication at the same time. No surprises, no he-said-she-said. The demand letter is the formal instrument. The email is the professional delivery vehicle. Together they create a paper trail that shows you acted, you communicated, and you protected your client.
+
+Skipping the insured email is the most common mistake adjusters make at this stage. The client finds out when the carrier calls them confused. That erodes trust and makes your job harder. Send it first, every time.
+
+---
+
+**TEMPLATE 1 — Email to Insured (send this BEFORE anything goes to the carrier)**
+
+*Why: The insured needs to know what you're doing and why before the carrier gets the demand. This prevents confusion, builds trust, and keeps your referral source informed. CC the contractor so they're not left wondering either.*
+
+To: [Insured Email]
+CC: [Contractor/Referral Source Email]
+Subject: [Claim #] – [Property Address] | Important Update on Your Claim
+
+[Insured First Name],
+
+I wanted to give you a quick update before we take our next step on your claim.
+
+We are sending a demand to [Carrier Name] today requesting that they release any undisputed funds immediately. Here is what that means in plain terms: even though we are still in dispute on the full value of your loss, the carrier is not permitted to hold back money for damage they cannot reasonably dispute. We are demanding they release whatever portion they acknowledge they owe — now — while we continue working on the rest.
+
+This is not a settlement. We are not agreeing to any final number. We are simply requiring the carrier to pay what they already know they owe while the larger dispute continues.
+
+You do not need to do anything. If the carrier contacts you directly about this, please forward the communication to me before responding.
+
+I will update you as soon as we hear back.
+
+[PA Name]
+[Phone] | [Email]
+[License Number]
+
+---
+
+**TEMPLATE 2 — Email to Carrier (send after Template 1, CC the insured)**
+
+*Why: This is the professional delivery of the demand letter. Tone is firm but not combative — you are not accusing them of bad faith yet, you are giving them the opportunity to do the right thing. The insured is copied so the carrier knows your client is aware of every communication. The demand letter is attached.*
+
+To: [Adjuster Name] | [Adjuster Email]
+CC: [Insured Name] | [Insured Email]
+Subject: [Claim #] – [Insured Name] – [Property Address] | Demand for Release of Undisputed Funds
+
+Dear [Adjuster Name],
+
+I understand that a full coverage determination may still be pending on this claim. I am not asking you to resolve every open issue today.
+
+What I am asking is straightforward: damage exists at this property, some portion of that damage is within the scope of your insured's policy, and that portion is not in dispute. The carrier is not permitted to hold payment on undisputed covered damage while broader claim discussions continue. We are demanding that you release those funds now.
+
+Please find our formal demand letter attached along with the supporting estimate and documentation. We are requesting payment of the undisputed amount within a reasonable period of time. We are available to discuss any questions at [phone/email].
+
+This correspondence does not constitute agreement to any limitation of this claim. All rights with respect to disputed amounts are expressly reserved.
+
+[PA Name]
+[Phone] | [Email]
+[License Number]
+
+Attachments:
+- Demand Letter — Undisputed Funds [Document 2]
+- Estimate / Scope of Loss
+- Supporting Photographs
+- [Additional documentation per upstream analysis]
+
+---
+
+**TEMPLATE 3 — Demand Letter (this is Document 2 — attached to Template 2)**
+
+*Why: The formal letter is the legal instrument. The email delivers it. Together they establish the demand on the record. The protective language below is non-negotiable — it prevents the carrier from treating this demand as a settlement figure or using your number to cap the claim.*
+
+→ See Document 2 section for the full letter template.
+
+**Protective language checklist — confirm all four are present before Document 2 is sent:**
+- ✅ "We are not agreeing to any specific undisputed funds amount your company may propose"
+- ✅ "This letter does not constitute agreement to any limitation of our claim"
+- ✅ "We are requesting release of the undisputed funds you acknowledge you owe"
+- ✅ "All rights with respect to disputed amounts are expressly reserved"
+
+---
 
 **🤖 AGENTIC NOTES**
 
@@ -176,6 +275,8 @@ Observations that fall outside the standard sections:
 - Anything an experienced PA would flag
 
 If nothing notable: "No additional observations."
+
+---
 
 **📆 REPORT DATA**
 
@@ -190,6 +291,8 @@ Generated: [Date] | Tool: CCS Undisputed Funds Pro™ | Review Required: Yes
 Read the `docx` skill before generating. Professional letterhead format. Do not reuse the same Canvas/file as Document 1.
 
 ### Letter Template
+
+---
 
 [PA Name / Firm Name]
 [Address]
