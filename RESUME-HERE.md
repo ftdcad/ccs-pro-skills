@@ -1,46 +1,48 @@
 # RESUME HERE — CCS Pro Skills
 
-**Last updated:** 2026-03-06 (Session 4)
+**Last updated:** 2026-03-06 (Session 5)
 
 ---
 
 ## WHERE WE ARE
 
+### Claude API Integration — LIVE AND WORKING
+Policy PRO is wired to the Claude API. Upload a policy PDF, click "Upload & Run Policy PRO", and Claude Sonnet 4.5 reads the full document and returns structured JSON that renders in the chain viewer.
+
+**First real test:** Ammerman CCOP.pdf — 110K input tokens, 8.6K output tokens. Report came back successfully.
+
 ### Skill Specs — Pipeline Coverage
 ```
-Policy -> Scope -> Strategy -> Denial/NewClaim/LossBelow -> Undisputed -> SPOL -> [15 DAY] -> Formal Demand -> 30 Day -> 45/60/75/90 Day
-  DONE     DONE     DONE              DONE                    DONE        DONE    <<<NEXT>>>      EMPTY          EMPTY       NOT STUBBED
+Policy -> Scope -> Strategy -> Denial/NewClaim/LossBelow -> Undisputed -> SPOL -> 15 DAY -> Formal Demand -> 30 Day -> 45/60/75/90 Day
+  DONE     DONE     DONE              DONE                    DONE        DONE    EMPTY       EMPTY          EMPTY       NOT STUBBED
 ```
 
-Support tools (fire on demand): State PRO = DONE, RFI/ROR Pro = DONE (renamed from rfi-pro this session)
+Support tools: State PRO = DONE, RFI/ROR Pro = DONE
 
-Each completed PRO has TWO files: skill spec (`name.md`) + schema (`name-schema.md`). All 10 done.
+### What Was Built This Session (Session 5)
+1. **Claude API integration** — `runPolicyPro()` in server.js sends uploaded PDFs to Claude Sonnet 4.5 with the Policy PRO system prompt, gets structured JSON back, saves to claim file
+2. **Loading overlay** — when you click Upload & Run, a full-screen overlay shows with a spinner and second counter while Claude processes
+3. **Full Policy PRO renderer** — updated `renderPolicyBody()` handles the complete schema: coverage limits, carrier info, underwriting, mortgagees, flags, endorsements, exclusions/gaps/limitations, legal/statutory (full quoted text), agentic notes, review meta, and handoff
+4. **Error handling** — if the API call fails, the claim shows an error state with the message instead of a blank card
+5. **Async upload route** — form submits via fetch (JS intercept), server processes, returns JSON, client redirects
+6. **dotenv** added for API key management — key lives in `.env` (gitignored)
+7. **Model map** defined — Sonnet for extraction PROs, Opus for strategy PROs (only Policy PRO wired so far)
 
-### Chain Viewer App — NOW the real tool (not just a viewer)
-Decision made this session: **the chain viewer IS the application**. It will accept uploads, run PROs via Claude API, generate reports, and advance claims through the pipeline.
-
-**Built this session:**
-- **+ New Claim button** on dashboard
-- **New Claim form** (`/new`) with **Paste from ClaimWizard** auto-fill — paste raw CW text, fields populate automatically
-- **Upload prompt** on claim view — detects current step, shows "NEXT STEP: Policy PRO — Upload the insurance policy", drag-and-drop upload zone
-- **File upload route** — saves to `uploads/[claimId]/`, marks PRO step as active
-- **multer** added as dependency for file handling
-
-### What's NOT built yet (Phase 2)
-- Claude API integration — upload goes to Claude, PRO runs, JSON comes back
-- .docx report generation from PRO output
-- Chain auto-advancement after PRO completes
-- PDF-to-image Vision pipeline for scanned policies
+### Chain Viewer App — Full Claim Workflow
+- Dashboard at `/` — lists all claims with progress bars
+- **+ New Claim** button → form with "Paste from ClaimWizard" auto-fill
+- Claim view shows the full PRO chain with upload prompts for the next step
+- Upload → Claude API → structured JSON → rendered card (Policy PRO only so far)
 
 ---
 
 ## NEXT SESSION PRIORITIES
 
-1. **Write 15 Day PRO skill spec** — `prompts/09-15-day-pro/` is empty. Design work, no BINGO needed.
-2. **Write Formal Demand PRO skill spec** — `prompts/10-formal-demand-pro/` is empty.
-3. **Write 30 Day PRO skill spec** — `prompts/11-30-day-pro/` is empty.
-4. **Stub 45/60/75/90 Day PRO folders** — not created yet.
-5. **Claude API integration** (Phase 2) — BINGO required. Wire uploads to Claude, get structured JSON back.
+1. **Review the Ammerman Policy PRO output** — Frank has the report loaded in the browser. Check data quality, compare to what a human PA would extract. Fix any rendering issues.
+2. **Polish the loading overlay** — staged messages instead of raw seconds (Reading document → Extracting data → Building report). Cosmetic only.
+3. **Wire Scope PRO** — same pattern as Policy PRO but with the Scope PRO prompt. Upload photos/inspection notes → Claude → structured JSON.
+4. **Write remaining skill specs** — 15 Day, Formal Demand, 30 Day, 45/60/75/90 Day folders are empty. Design work, no BINGO needed.
+5. **Backwards compatibility** — the Armstrong claim uses old field names (coverage.A vs coverage.coverageA). Renderer handles both, but Armstrong data could be updated to match the new schema.
 
 ---
 
@@ -48,19 +50,34 @@ Decision made this session: **the chain viewer IS the application**. It will acc
 
 | What | Where |
 |------|-------|
-| Server (Express + all renderers) | `server.js` |
+| Server (Express + API + renderers) | `server.js` |
 | Styles | `public/styles.css` |
-| Client JS | `public/chain.js` |
+| Client JS (toggle + upload + overlay) | `public/chain.js` |
 | Claim data | `claims/*.json` |
+| Uploaded files | `uploads/[claimId]/` (gitignored) |
 | Skill specs | `prompts/XX-name/name.md` |
 | Schemas | `prompts/XX-name/name-schema.md` |
-| RFI/ROR Pro (renamed) | `prompts/support/rfi-ror-pro/` |
+| API key | `.env` (gitignored — NEVER commit) |
 | API design | `prompts/sketches/API-SKETCH-V2.md` |
-| Flowchart | `pro-chain-flowchart.html` |
 | Full project context | `CONTEXT.md` |
 
+## ARCHITECTURE
+
+```
+Browser → Express server (server.js)
+  ├── GET /              → Dashboard (list claims)
+  ├── GET /new           → New claim form (ClaimWizard paste)
+  ├── POST /new          → Create claim JSON
+  ├── GET /claim/:id     → Render chain view (server-side HTML)
+  └── POST /claim/:id/upload/:proKey
+        ├── multer saves file to uploads/
+        ├── If proKey=policy → runPolicyPro() → Claude API → JSON
+        ├── Save to claims/*.json
+        └── Return JSON (fetch) or redirect (form)
+```
+
 ## RULES
-- **BINGO** before code changes. Spec/design is free.
+- **BINGO** before code changes. Spec/design talk is free.
 - **Communication tone**: Know the law, never cite it in carrier letters.
-- **Armstrong data** = test case only, not hardcoded.
+- **.env** contains the API key — NEVER commit it.
 - **Push to git** before ending every session.

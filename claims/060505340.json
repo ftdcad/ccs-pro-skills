@@ -1,0 +1,275 @@
+{
+  "meta": {
+    "claimNumber": "060505340",
+    "lastName": "Ammerman",
+    "generatedDate": "2026-03-06"
+  },
+  "claim": {
+    "insured": "Pamela Ammerman",
+    "address": "1131 Happy Ridge Dr, Front Royal, VA 22630",
+    "carrier": "Liberty Mutual",
+    "policyNumber": "H3A23184160640",
+    "claimNumber": "060505340",
+    "dateOfLoss": "3/16/2025 — Wind/Hail",
+    "peril": "Wind/Hail",
+    "policyType": "",
+    "fileStatus": "CTG - New Claim"
+  },
+  "pros": {
+    "policy": {
+      "status": "complete",
+      "coverage": {
+        "coverageA": "$401,300",
+        "coverageB": "$40,130",
+        "coverageC": "$300,980",
+        "coverageD": "Actual Loss Sustained",
+        "combinedTotal": "$742,410",
+        "hurricaneDeductible": "Not Specified",
+        "hurricaneDeductibleBasis": "Not Specified",
+        "aopDeductible": "$1,000",
+        "fungiDeductible": "Not Specified",
+        "waterBackupLimit": "Not Specified",
+        "premisesLiability": "$300,000",
+        "lossSettlement": "Replacement Cost",
+        "appraisalClause": "present"
+      },
+      "underwriting": {
+        "yearBuilt": "Not Specified",
+        "sqFootage": "Not Specified",
+        "roofYear": "Not Specified",
+        "roofAge": "Not Specified",
+        "roofType": "Not Specified",
+        "construction": "Not Specified",
+        "occupancy": "Owner Occupied",
+        "occupancyFlag": false,
+        "county": "Not Specified",
+        "policyPeriod": "09/09/2024 - 09/09/2025",
+        "protectionClass": "Not Specified",
+        "secondaryWaterResistance": "Not Specified",
+        "openingProtection": "Not Specified"
+      },
+      "carrier": {
+        "carrierName": "Montgomery Mutual Insurance Company (underwritten by Liberty Mutual)",
+        "agentName": "Not Specified",
+        "agentLocation": "Not Specified",
+        "agentPhone": "1-866-500-8377",
+        "premium": "$1,850.00",
+        "premiumBreakdown": "Standard Policy with HomeProtector Plus: $1,847; Additional Coverages: $3"
+      },
+      "mortgagees": [],
+      "endorsements": {
+        "critical": [
+          "FMHO 1198 11 23 - Virginia HomeProtector Plus Endorsement: Increases jewelry/furs theft limit to $2,500 ($1,500 per article), modifies replacement cost settlement ($2,500 threshold for payment), adds refrigerator/freezer contents coverage ($500 limit), adds lock replacement coverage ($250 limit)",
+          "FMHO 2265VA 11 23 - Amendatory Seepage Endorsement: EXCLUDES continuous or repeated seepage/leakage from plumbing, heating, AC systems or domestic appliances over weeks/months/years for Coverage A/B (does NOT apply to personal property)",
+          "FMHO 3413VA 11 23 - Special Provisions - Virginia: Comprehensive state-specific modifications including expanded business definition, modified vacancy definition (30 consecutive days), 2-year statute of limitations for suit against insurer, modified earth movement exclusion, and modified loss settlement provisions"
+        ],
+        "warn": [
+          "HO 04 53 04 91 - Credit Card, Fund Transfer Card, Forgery and Counterfeit Money Coverage (Increased Limit): Limit shown as blank in endorsement but Additional Coverage section states $500 base limit plus $1,000 additional under Virginia HomeProtector endorsement",
+          "FMHO 1087 1014 - Waiver of Deductible - Theft: Waives deductible for theft from residence premises IF professionally-monitored theft alarm system is installed, functioning, and maintained; does NOT apply if system not activated, service discontinued, or theft occurs off premises or in unprotected area",
+          "HO 23 37 04 91 - Amendatory Home Day Care: NO COVERAGE for home day care business - excludes liability, Coverage B (if structures used for business), and Coverage C (business property on/off premises)"
+        ],
+        "standard": [
+          "FMHO 2934VA 1123 - Homeowner Amendatory Endorsement",
+          "FMHO 4172 1014 - Protective Devices: Acknowledges installation of fire, theft, or water protective systems; discount applied; insured must maintain in working order",
+          "FMHO 2835 - Inflation Protection: Automatically adjusts Coverage A/B/C/D limits by residential building cost inflation index",
+          "AS3903 08 17 - Master Montgomery Mutual Insurance Company Endorsement: Substitutes Montgomery Mutual for Liberty Mutual references throughout policy",
+          "PMKT 1192 1015 - Additional Policy Protection Endorsement: Provides eligibility for devices, equipment, services, benefits or rewards points from Liberty Mutual or business partners"
+        ]
+      },
+      "exclusionsGapsLimitations": {
+        "gaps": [
+          "No hurricane/windstorm deductible specified in declarations (policy is in Virginia, not a coastal state, so standard AOP deductible likely applies to wind/hail)",
+          "No fungi/mold deductible or sublimit specified",
+          "No water backup/sump overflow limit specified in declarations (not included in base coverage)",
+          "No ordinance or law coverage beyond 10% of Coverage A limit per Virginia endorsement",
+          "No earthquake coverage unless purchased by separate endorsement (explicitly excluded per Important Messages)"
+        ],
+        "limitations": [
+          "Jewelry/watches/furs/precious stones: $2,500 for theft ($1,500 per article max); $2,500 for non-named perils ($1,500 per article max) per FMHO 1198",
+          "Securities/deeds/tickets/stamps: $1,000 total",
+          "Watercraft: $1,000 total (does not apply to rowboats/canoes)",
+          "Firearms theft: $2,000",
+          "Silverware/goldware theft: $2,500",
+          "Business property on premises: $2,500",
+          "Business property away from premises: $500",
+          "Electronic apparatus in/upon motor vehicle: $1,000",
+          "Monuments/headstones/grave markers/urns: $500 per Virginia endorsement",
+          "Credit card/fund transfer/forgery/counterfeit money: $1,000 total (base $500 + $1,000 additional per HomeProtector endorsement)",
+          "Trees/shrubs/plants: 5% of Coverage A ($20,065 total), $500 per item",
+          "Fire department service charge: $500 (or $250 for volunteer fire department under specific conditions)",
+          "Loss assessment: $1,000 per occurrence",
+          "Refrigerator/freezer contents (power failure/mechanical breakdown): $500 per HomeProtector endorsement",
+          "Lock replacement (keys stolen): $250 per HomeProtector endorsement",
+          "Debris removal: included in limit of liability + additional 5% if damage + debris removal exceeds limit; fallen trees $500 total if tree damages covered structure",
+          "Ordinance or law: 10% of Coverage A ($40,130) per Virginia endorsement for increased costs due to enforcement of construction/demolition/repair ordinances",
+          "Replacement cost settlement threshold: If repair/replace cost is less than $2,500, RCV paid immediately; if $2,500 or more, ACV paid first, then RCV after repairs complete (per Virginia HomeProtector endorsement)",
+          "80% coinsurance requirement for full replacement cost settlement on dwelling/other structures per Virginia endorsement",
+          "Personal property settled at ACV (base policy does NOT provide RCV for personal property despite HomeProtector endorsement mentioning 'Personal Property with Replacement Cost' in coverage description)"
+        ],
+        "exclusions": [
+          "CRITICAL - CONTINUOUS SEEPAGE/LEAKAGE EXCLUSION (FMHO 2265VA): 'Continuous or repeated seepage or leakage of water or steam from within a plumbing, heating, or air conditioning system or from within a domestic appliance which occurs over a period of weeks, months, or years' is EXCLUDED for Coverage A (Dwelling) and Coverage B (Other Structures). This exclusion does NOT apply to personal property (Coverage C).",
+          "Flood: 'Your Homeowners policy does not provide coverage for damage caused by flood, even if the flood is caused by a storm surge.' (Important Messages section)",
+          "Earthquake: 'Your policy does not provide coverage for damage caused by earthquakes. Earthquake coverage is excluded unless purchased by endorsement.' (Important Messages section)",
+          "Earth movement (per FMHO 3413VA): 'Movement of the earth, whether combined with water or not, in any direction, including but not limited to: earthquake, including land shock waves or tremors before, during, or after a volcanic eruption; landslide, mud slide, or mud flow; subsidence or sinkhole; or any other earth movement, including earth sinking, rising, shifting, expanding, contracting, or eroding; caused by or resulting from manmade, animal, or natural actions, events, or conditions.' Ensuing fire, explosion, theft, and glass breakage ARE covered.",
+          "Water damage (base policy exclusions): '(1) Flood, surface water, waves, tidal water, overflow of a body of water, or spray from any of these, whether or not driven by wind; (2) Water which backs up through sewers or drains or which overflows from a sump; or (3) Water below the surface of the ground, including water which exerts pressure on or seeps or leaks through a building, sidewalk, driveway, foundation, swimming pool or other structure.' Ensuing fire, explosion, or theft ARE covered.",
+          "Ordinance or law: Enforcement of ordinances regulating construction/repair/demolition is excluded EXCEPT for the 10% additional coverage provided under Virginia endorsement",
+          "Neglect (per FMHO 3413VA): 'Neglect of the insured to use all reasonable means to save and preserve property at and after the time of a loss.'",
+          "Intentional loss (per FMHO 3413VA): 'Any loss arising out of any act committed: (1) By or at the direction of an insured; and (2) With the intent to cause a loss.' Coverage is denied only with respect to the insured who committed the intentional act.",
+          "War: 'Undeclared war, civil war, insurrection, rebellion or revolution; warlike act by a military force or military personnel; or destruction, seizure or use for a military purpose.' Exception: acts of destruction due to civil authority order to prevent spread of fire ARE covered if fire did not originate from excluded cause. Discharge of nuclear weapon deemed warlike act even if accidental.",
+          "Nuclear hazard: 'Any nuclear reaction, radiation, or radioactive contamination, all whether controlled or uncontrolled or however caused, or any consequence of any of these.' Exception: direct loss by fire resulting from nuclear hazard IS covered.",
+          "Power failure: Failure of power or utility service if failure takes place off the residence premises (unless a Peril Insured Against ensues on premises). Exception: Refrigerator/freezer contents coverage under HomeProtector endorsement provides limited coverage for power failure.",
+          "Freezing while vacant/unoccupied: Freezing of plumbing, heating, AC, sprinkler system or appliance while dwelling is vacant, under construction, or unoccupied for 4+ consecutive days UNLESS insured used reasonable care to maintain heat or shut off water and drain systems.",
+          "Vandalism while vacant (per FMHO 3413VA): Vandalism/malicious mischief if dwelling is vacant (not occupied for 30+ consecutive days and most property removed such that dwelling not functional as residence). Ensuing loss from Peril Insured Against IS covered.",
+          "Theft by insured: Theft committed by an insured is excluded.",
+          "Theft from dwelling under construction: Theft in or to dwelling under construction, or of materials/supplies for construction until dwelling finished and occupied.",
+          "Theft by roomers/boarders/tenants: Theft committed by roomers, boarders, tenants, their employees, or household members.",
+          "Motor vehicles: Ownership, maintenance, use, loading/unloading of motor vehicles or recreational motor vehicles (with specific exceptions for trailers not towed by motor vehicle, recreational vehicles not owned by insured or on insured location, golf carts on golf courses, recreational vehicles on insured location, motor vehicles in dead storage, and vehicles used to service residence).",
+          "Watercraft (with exceptions): Watercraft principally designed to be propelled by engine power or electric motor, or sailing vessels (with specific exceptions based on horsepower, length, and storage status).",
+          "Aircraft (with limited exceptions per FMHO 3413VA): Ownership, maintenance, use, loading, or unloading of aircraft. Exceptions: drones without cameras and drones not capable of carrying people/cargo; model/hobby aircraft not capable of carrying people/cargo.",
+          "Business pursuits (with limited exceptions per FMHO 3413VA): Arising out of business pursuits of an insured. Exception: incidental business activities conducted by insured under 21 years of age, producing revenue of $2,500 or less during policy period, or combination of both.",
+          "Home day care business (HO 23 37): If insured regularly provides home day care services for compensation, NO coverage for Section II liability, Coverage B (if structures used for business), or Coverage C (business property on/off premises).",
+          "Controlled substances: Use, sale, manufacture, delivery, transfer, or possession of controlled substances as defined by federal law (cocaine, LSD, marijuana, narcotics). Exception: legitimate use of prescription drugs following licensed physician's orders.",
+          "Sexual molestation, corporal punishment, physical or mental abuse.",
+          "Transmission of communicable disease by an insured.",
+          "Pollutants: Discharge, dispersal, seepage, migration, release, or escape of pollutants (solid, liquid, gaseous, thermal irritants/contaminants including smoke, vapor, soot, fumes, acids, alkalis, chemicals, waste) UNLESS discharge is itself caused by a Peril Insured Against under Coverage C.",
+          "Settling, cracking, shrinking, bulging, expansion of pavements, patios, foundations, walls, floors, roofs, ceilings (ensuing water damage from plumbing/heating/AC system or appliance IS covered for cost of tear out and replacement, but NOT loss to system/appliance itself).",
+          "Wear and tear, marring, deterioration, inherent vice, latent defect, mechanical breakdown.",
+          "Smog, rust, corrosion, mold, wet or dry rot.",
+          "Smoke from agricultural smudging or industrial operations.",
+          "Birds, vermin, rodents, insects.",
+          "Animals owned or kept by an insured.",
+          "Weather conditions (only if weather contributes with an otherwise excluded cause to produce loss).",
+          "Acts or decisions (including failure to act/decide) of any person, group, organization, or governmental body.",
+          "Faulty, inadequate, or defective: planning, zoning, development, surveying, siting, design, specifications, workmanship, repair, construction, renovation, remodeling, grading, compaction, materials, or maintenance."
+        ]
+      },
+      "legalStatutory": {
+        "statuteOfLimitations": "Virginia: 2 years after date of loss per FMHO 3413VA 11 23. 'No action can be brought unless the policy provisions have been complied with and the action is started within two years after the date of loss.'",
+        "appraisalClause": "SECTION I - CONDITIONS, Item 6. Appraisal (as modified by FMHO 3413VA 11 23): 'If you and we fail to agree on the amount of loss, either may demand an appraisal of the loss. In this event, each party will choose a competent and disinterested appraiser within 20 days after receiving a written request from the other. The two appraisers will choose a competent and disinterested umpire. If they cannot agree upon an umpire within 15 days, you or we may apply in writing, for the appointment of an umpire, to a judge of a court of record in the state where the residence premises is located. The appraisers will separately set the amount of loss. If the appraisers submit a written report of an agreement to us, the amount agreed upon will be the amount of loss. If they fail to agree, they will submit their differences to the umpire. A decision agreed to by any two will set the amount of loss. Each party will: a. Pay its own appraiser; and b. Bear the other expenses of the appraisal and umpire equally. If the written demand is made by this Company, then the insured shall be reimbursed by this Company for the reasonable cost of the insured's appraiser and the insured's portion of the cost of the umpire. If there is an appraisal, we will still retain our right to deny the claim.'",
+        "suitAgainstUs": "SECTION I - CONDITIONS, Item 8. Suit Against Us (as modified by FMHO 3413VA 11 23): 'No action can be brought unless the policy provisions have been complied with and the action is started within two years after the date of loss.' SECTION II - CONDITIONS, Item 6. Suit Against Us (as modified by FMHO 3413VA 11 23): 'No action can be brought unless there has been compliance with the policy provisions. No one will have the right to join us as a party to any action against an insured. Also, no action with respect to Coverage E can be brought against us until the obligation of the insured has been determined by final judgment or agreement signed by us.' ADDITION (FMHO 3413VA): 'Any person or organization or their legal representative who has secured such judgment or written agreement against the insured shall be entitled to recover under this policy to the extent of the insurance afforded under this policy.' SECTION II - CONDITIONS, Item 1. Judgements Returned Unsatisfied (FMHO 3413VA): 'If execution on a judgment against an insured or an insured's personal representative is returned unsatisfied in an action brought to recover damages for injury sustained or for loss or damage incurred during the policy term, then an action may be maintained against us under the terms of this policy for the amount of the judgment not exceeding the amount of the applicable limit of coverage under this policy.'",
+        "euoRequirements": "SECTION I - CONDITIONS, Item 2. Your Duties After Loss, paragraph f.(3) (as modified by FMHO 3413VA 11 23): 'Submit to examination under oath and sign the same;' This appears in context of 'As often as we reasonably require' you must: '(1) Show the damaged property; (2) Provide us with records and documents we request and permit us to make copies; and (3) Submit to examination under oath and sign the same.'"
+      },
+      "flags": [
+        {
+          "variant": "red",
+          "content": "CRITICAL COVERAGE LIMITATION - CONTINUOUS SEEPAGE/LEAKAGE EXCLUSION: Endorsement FMHO 2265VA 11 23 EXCLUDES 'continuous or repeated seepage or leakage of water or steam from within a plumbing, heating, or air conditioning system or from within a domestic appliance which occurs over a period of weeks, months, or years' for Coverage A (Dwelling) and Coverage B (Other Structures). This exclusion does NOT apply to Coverage C (Personal Property). This is a significant gap that could deny coverage for long-term water damage from slow leaks."
+        },
+        {
+          "variant": "yellow",
+          "content": "POLICY TYPE - HO-3: This is a LibertyGuard Deluxe Homeowners Policy HO 00 03 04 91 (Special Form). Coverage A and B are open peril (risk of direct physical loss except exclusions). Coverage C is named peril only (16 listed perils). Standard coverage structure with Virginia-specific endorsements."
+        },
+        {
+          "variant": "yellow",
+          "content": "REPLACEMENT COST SETTLEMENT - $2,500 THRESHOLD: Per Virginia HomeProtector Plus endorsement FMHO 1198 11 23, if cost to repair/replace is $2,500 or more, insurer pays ACV first, then full RCV after repairs complete. If cost is less than $2,500, full RCV paid immediately. Insured has burden of completing repairs to recover full RCV for losses $2,500+. Also note 80% coinsurance requirement per FMHO 3413VA."
+        },
+        {
+          "variant": "yellow",
+          "content": "PERSONAL PROPERTY SETTLEMENT - ACV ONLY: Despite declarations page stating 'Personal Property with Replacement Cost,' the Virginia endorsement FMHO 3413VA 11 23 confirms personal property is settled at 'actual cash value at the time of loss but not more than the amount required to repair or replace with like kind and quality.' There is NO replacement cost coverage for personal property under this policy."
+        },
+        {
+          "variant": "yellow",
+          "content": "NO HOME DAY CARE COVERAGE: Endorsement HO 23 37 04 91 eliminates ALL coverage (liability, Coverage B, Coverage C) if insured regularly provides home day care services for compensation. If insured operates home day care, this policy provides NO coverage for that exposure."
+        },
+        {
+          "variant": "blue",
+          "content": "APPRAISAL CLAUSE AVAILABLE: Policy includes detailed appraisal provision (FMHO 3413VA 11 23). If insured invokes appraisal in writing, insurer must reimburse insured's appraiser cost and insured's portion of umpire cost. Appraisal does not waive insurer's right to deny claim. Strategic tool for amount-in-controversy disputes."
+        },
+        {
+          "variant": "blue",
+          "content": "STATUTE OF LIMITATIONS - 2 YEARS: Virginia endorsement FMHO 3413VA provides insured must bring suit within 2 years after date of loss for Section I claims. This is more favorable than the 1-year SOL in the base ISO form. Confirm deadline: 3/16/2027 (2 years from 3/16/2025 DOL)."
+        },
+        {
+          "variant": "blue",
+          "content": "DIRECT ACTION STATUTE: Virginia endorsement FMHO 3413VA 11 23 includes direct action provision for Section II (liability): 'Any person or organization or their legal representative who has secured such judgment or written agreement against the insured shall be entitled to recover under this policy to the extent of the insurance afforded under this policy.' Also includes 'Judgements Returned Unsatisfied' condition allowing action against insurer if execution on judgment is returned unsatisfied."
+        },
+        {
+          "variant": "green",
+          "content": "POLICY ACTIVE ON DOL: Policy period 09/09/2024 - 09/09/2025. Date of loss 3/16/2025 falls within policy period. Coverage is in effect."
+        },
+        {
+          "variant": "green",
+          "content": "WIND/HAIL COVERAGE CONFIRMED: No exclusions or sublimits for wind or hail. Standard AOP deductible of $1,000 applies to wind/hail loss (no separate hurricane/windstorm deductible in Virginia). Named peril 'Windstorm or Hail' included in Coverage C Section I - Perils Insured Against."
+        },
+        {
+          "variant": "green",
+          "content": "REPLACEMENT COST COVERAGE - DWELLING: Coverage A and B are eligible for replacement cost settlement per FMHO 3413VA and FMHO 1198, subject to 80% coinsurance and $2,500 payment threshold. Expanded Replacement Cost provision with 20% additional limit beyond Coverage A ($401,300 + 20% = up to $481,560 available for dwelling replacement cost)."
+        }
+      ],
+      "missing": [
+        "Year built",
+        "Square footage",
+        "Roof year installed",
+        "Roof age",
+        "Roof type",
+        "Construction type",
+        "County",
+        "Protection class",
+        "Secondary water resistance",
+        "Opening protection",
+        "Agent name",
+        "Agent location",
+        "Hurricane/windstorm deductible (if any - likely N/A for Virginia)",
+        "Fungi/mold sublimit",
+        "Water backup/sump overflow limit (if any)",
+        "Mortgagee information"
+      ],
+      "agenticNotes": [
+        {
+          "title": "Critical Exclusion - Continuous Seepage/Leakage",
+          "content": "Endorsement FMHO 2265VA 11 23 is a major coverage gap. This excludes 'continuous or repeated seepage or leakage of water or steam from within a plumbing, heating, or air conditioning system or from within a domestic appliance which occurs over a period of weeks, months, or years' for Coverage A (Dwelling) and Coverage B (Other Structures). The exclusion does NOT apply to Coverage C (Personal Property). This means if a slow leak from a water heater, washing machine hose, or plumbing fitting causes damage to the structure over time (mold, rot, foundation damage), there is NO coverage. Only sudden and accidental discharge/overflow is covered. This is a significant limitation and could be used to deny long-term water damage claims. NOTE: The current claim is wind/hail (3/16/2025), so this exclusion does not apply, but it is a major policy gap to be aware of for future claims."
+        },
+        {
+          "title": "Personal Property - ACV Only (No RCV)",
+          "content": "Despite the declarations page stating 'Personal Property with Replacement Cost' and the Virginia HomeProtector Plus endorsement mentioning replacement cost, the actual loss settlement provision in FMHO 3413VA 11 23 clearly states personal property is settled at 'actual cash value at the time of loss but not more than the amount required to repair or replace with like kind and quality.' This means depreciation WILL be applied to personal property (Coverage C) losses. There is NO replacement cost coverage for personal property under this policy. This is a critical distinction. For wind/hail damage to personal property (furniture, electronics, clothing), insured will only recover depreciated value, not full replacement cost. Advise insured accordingly if personal property claim is involved."
+        },
+        {
+          "title": "Replacement Cost Settlement - $2,500 Threshold and 80% Coinsurance",
+          "content": "For Coverage A (Dwelling) and Coverage B (Other Structures), replacement cost settlement is available BUT subject to conditions: (1) 80% COINSURANCE: If Coverage A limit is less than 80% of full replacement cost at time of loss, insured will only recover the greater of (a) ACV or (b) a proportional amount based on the ratio of Coverage A limit to 80% of replacement cost. At $401,300 Coverage A, insured needs full replacement cost to be $501,625 or less to avoid coinsurance penalty. Confirm actual replacement cost of dwelling. (2) $2,500 THRESHOLD (FMHO 1198 11 23): If cost to repair or replace is $2,500 or more, insurer pays ACV first, then pays additional amount up to RCV only after repairs are complete. If cost is less than $2,500, full RCV paid immediately whether or not repairs complete. (3) EXPANDED REPLACEMENT COST: Per FMHO 1198 and FMHO 3413VA, insurer will pay up to 120% of Coverage A limit (up to $481,560) for replacement cost if 80% coinsurance is met. This is favorable to insured. For current wind/hail claim (3/16/2025), confirm scope of damage, estimate repair costs, and advise insured on RCV settlement process if estimate is $2,500 or more."
+        },
+        {
+          "title": "Appraisal Clause - Strategic Tool",
+          "content": "Virginia endorsement FMHO 3413VA 11 23 modifies the appraisal clause favorably for insured. If insured demands appraisal in writing, insured must pay own appraiser initially, BUT if INSURER demands appraisal, insured is reimbursed for cost of insured's appraiser AND insured's portion of umpire cost. This is a strategic lever. Appraisal is available for amount-in-controversy disputes (how much is the loss worth?). Appraisal does NOT resolve coverage disputes (is the loss covered?). Insurer retains right to deny claim even after appraisal. For current wind/hail claim, if insurer's estimate is significantly lower than insured's estimate, appraisal is a viable option. The 2-year statute of limitations (3/16/2027 for this DOL) provides sufficient time to pursue appraisal before filing suit if necessary."
+        },
+        {
+          "title": "Virginia Statute of Limitations - 2 Years",
+          "content": "FMHO 3413VA 11 23 provides 2-year statute of limitations for Section I (property) claims: 'No action can be brought unless the policy provisions have been complied with and the action is started within two years after the date of loss.' This is more favorable than the 1-year SOL in the base ISO HO-3 form. For current claim with DOL 3/16/2025, insured has until 3/16/2027 to file suit if claim is denied or underpaid. This is important for claim strategy and negotiations. Also note: insured must comply with all policy provisions (notice, proof of loss, EUO if requested) before suit can be filed. The 2-year period does not extend time to comply with policy conditions (e.g., 60-day proof of loss requirement)."
+        },
+        {
+          "title": "Wind/Hail Coverage - Standard AOP Deductible Applies",
+          "content": "This policy does NOT have a separate hurricane or windstorm deductible. The standard All Other Perils (AOP) deductible of $1,000 applies to wind and hail losses. This is favorable for insured. The declarations page lists 'Losses covered under Section I are subject to a deductible of: $1,000' with no separate hurricane deductible line item. Virginia is not a coastal state with mandatory percentage windstorm deductibles like Florida or North Carolina. For current wind/hail claim (DOL 3/16/2025), the $1,000 deductible applies to the TOTAL LOSS (not per building or per coverage). Example: If wind damages roof ($15,000 to dwelling) and siding ($5,000 to dwelling) and personal property ($3,000), the total loss is $23,000 and the deductible is $1,000, resulting in net payment of $22,000 (subject to coverage limits and loss settlement provisions)."
+        },
+        {
+          "title": "No Mortgagee Listed",
+          "content": "The declarations page and entire policy document do NOT list any mortgagees. The 'Mortgagees' section on the declarations page is blank. This means there is no lender with a financial interest in the property requiring notification or payment under the standard mortgage clause. This is unusual for a residential property with Coverage A of $401,300 unless the property is owned free and clear. For current wind/hail claim, insurer will make payment solely to the insured (Pamela Kay Ammerman). No mortgagee consent or endorsement required for settlement. Confirm with insured whether property is mortgaged or owned outright. If mortgaged, lender may have separate requirements for use of insurance proceeds for repairs."
+        },
+        {
+          "title": "Expanded Coverage A Limit with Inflation Protection",
+          "content": "Coverage A limit of $401,300 is subject to automatic inflation adjustment per endorsement FMHO 2835. The endorsement states: 'The limits of liability for Coverage A, Dwelling; Coverage B, Structure; Coverage C, Personal Property; and Coverage D, Loss of Use, shall be raised by the rate of increase in the latest available information on residential building cost inflation.' The effective date for inflation protection is the policy effective date (09/09/2024) unless Coverage A is changed mid-term. To calculate current Coverage A limit as of DOL 3/16/2025, insurer will divide the Index Level for 3/16/2025 by the Index Level for 09/09/2024 and multiply by $401,300. This could result in Coverage A limit of $405,000 - $410,000+ as of DOL depending on inflation index. Request insurer's calculation of inflation-adjusted limits as of DOL. This also applies to Coverage B ($40,130 x inflation factor), Coverage C ($300,980 x inflation factor), and Coverage D (Actual Loss Sustained, no inflation factor needed). ALSO: The Virginia HomeProtector endorsement FMHO 1198 11 23 provides Expanded Replacement Cost, which allows up to 120% of the inflation-adjusted Coverage A limit for dwelling replacement cost if 80% coinsurance is met. This means effective Coverage A limit for replacement cost purposes could be up to $492,000+ (assuming $410,000 inflation-adjusted limit x 120%)."
+        }
+      ],
+      "reviewMeta": {
+        "reviewer": "CCS Policy Pro",
+        "sourcePages": 47,
+        "generatedDate": "2025-06-10"
+      },
+      "handoff": {
+        "to": "Scope PRO",
+        "content": "Policy reviewed for Pamela Kay Ammerman, 1131 Happy Ridge Dr, Front Royal, VA 22630. Carrier: Montgomery Mutual Insurance Company (Liberty Mutual). Policy #: H3A23184160640. Policy period: 09/09/2024 - 09/09/2025 (active on DOL 3/16/2025). Policy type: HO-3 LibertyGuard Deluxe Homeowners with Virginia HomeProtector Plus endorsement. Coverage A: $401,300 (subject to inflation adjustment as of DOL; likely $405K-$410K+ with expanded RCV up to 120% = ~$492K max for dwelling). Coverage B: $40,130. Coverage C: $300,980 (ACV settlement only, NO RCV for personal property). Coverage D: Actual Loss Sustained. Deductible: $1,000 AOP (applies to wind/hail, no separate hurricane deductible). Loss settlement: Replacement cost for dwelling/structures subject to 80% coinsurance and $2,500 threshold (ACV paid first if $2,500+, then RCV after repairs complete). Roof info: NOT SPECIFIED in policy (year built, roof year, roof type, roof age all missing from underwriting data - must obtain from inspection or insured). KEY FLAGS: (1) RED - Continuous seepage/leakage exclusion for long-term water damage to dwelling/structures (does not apply to current wind/hail claim but major gap). (2) YELLOW - Personal property is ACV only (no RCV despite dec page language). (3) YELLOW - $2,500 RCV payment threshold and 80% coinsurance apply to dwelling/structure claims. (4) GREEN - Wind/hail covered, standard $1,000 deductible, policy active on DOL, RCV available for dwelling up to 120% of Coverage A. No mortgagee listed. 2-year SOL (deadline 3/16/2027). Appraisal clause available (insured reimbursed for appraiser/umpire cost if insurer demands appraisal). Proceed with wind/hail damage assessment for DOL 3/16/2025. Confirm inflation-adjusted Coverage A limit as of DOL and obtain roof details from inspection."
+      },
+      "_meta": {
+        "model": "claude-sonnet-4-5-20250929",
+        "inputTokens": 110184,
+        "outputTokens": 8600,
+        "processedAt": "2026-03-06T17:55:33.742Z"
+      },
+      "uploadedFiles": [
+        {
+          "originalName": "Ammerman CCOP.pdf",
+          "savedAs": "1772819517006-Ammerman_CCOP.pdf",
+          "size": 1082709,
+          "uploadedAt": "2026-03-06T17:51:57.015Z"
+        }
+      ]
+    }
+  }
+}

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -196,6 +197,244 @@ const STEP_UPLOAD_PROMPTS = {
   },
 };
 
+// ─── Claude API Integration ─────────────────────────────────
+
+const POLICY_PRO_SYSTEM_PROMPT = `You are CCS Policy Pro™, a specialized insurance policy review system. You extract, analyze, and format insurance policy information into structured JSON for a claims management pipeline.
+
+## Your Task
+Read the uploaded insurance policy document completely — every page, every endorsement, every amendment. Extract all data into the JSON schema provided below.
+
+## Extraction Rules
+1. EXTRACT FROM SOURCE ONLY. Every data point comes from the policy document. If information isn't in the document, use "Not Specified" for strings or null for numbers.
+2. QUOTE POLICY LANGUAGE EXACTLY for exclusions, endorsements, appraisal clauses, and suit clauses. Paraphrasing changes legal meaning.
+3. READ EVERY PAGE. Policies bury critical language in endorsements, amendments, and riders that override the declarations page.
+4. SCAN ALL ENDORSEMENTS AND AMENDMENTS. Look for: matching endorsements, cosmetic damage exclusions, roof payment schedules (ACV by age), right to repair clauses, ACV endorsements, wind/hail sublimits or exclusions, and any language that reduces coverage from what the dec page suggests.
+5. IDENTIFY EXCLUSIONS AND GAPS. Quote the specific language. Flag anything the carrier could use to deny or underpay. Pay special attention to: sand damage coverage, ensuing loss language, and ambiguous provisions.
+6. CHECK LEGAL PROVISIONS. Appraisal clause (full text), suit against us clause, statute of limitations.
+7. EVERY ENDORSEMENT gets a plain-English explanation, not just the form number.
+
+## Flag Variants
+- red: Immediate risk to claim — occupancy issues, roof age triggering depreciation, coverage voids
+- yellow: Caution — policy type nuances, low sublimits, endorsement risks
+- blue: Informational — strategic leverage, appraisal clause available, burden of proof on carrier
+- green: Confirmed positive — coverage verified, policy active on DOL, RCV confirmed
+
+## Endorsement Classification
+- critical: Endorsements that DIRECTLY affect claim outcome — form name + number + plain-English why it matters
+- warn: Endorsements that MAY limit coverage under certain conditions
+- standard: Routine endorsements (state changes, deductible forms, etc.)
+
+## Agentic Notes
+After extraction, add strategic observations: policy type analysis (DP-3 vs HO-3, named vs open peril), coverage gap warnings, endorsement impact in plain English, exclusion risks, property red flags. If nothing notable, use [{"title": "None", "content": "No additional observations."}].
+
+## Output
+Return ONLY a valid JSON object. No markdown, no code blocks, no explanation text. Just the raw JSON.
+
+The JSON MUST match this structure:
+{
+  "status": "complete",
+  "coverage": {
+    "coverageA": "$amount or Not Specified",
+    "coverageB": "$amount or Not Specified",
+    "coverageC": "$amount or Not Specified",
+    "coverageD": "$amount or Not Specified",
+    "combinedTotal": "$amount (sum of A+B+C+D)",
+    "hurricaneDeductible": "$amount or Not Specified",
+    "hurricaneDeductibleBasis": "e.g. 2% of Coverage A, or Not Specified",
+    "aopDeductible": "$amount or Not Specified",
+    "fungiDeductible": "$amount or Not Specified",
+    "waterBackupLimit": "$amount or Not Specified",
+    "premisesLiability": "$amount or Not Specified",
+    "lossSettlement": "Replacement Cost or Actual Cash Value",
+    "appraisalClause": "present or not found"
+  },
+  "underwriting": {
+    "yearBuilt": 1985,
+    "sqFootage": "string or Not Specified",
+    "roofYear": 2006,
+    "roofAge": 18,
+    "roofType": "Architectural Shingle, 3-Tab, Metal, Tile, etc.",
+    "construction": "Masonry, Frame, etc.",
+    "occupancy": "Owner Occupied, Tenant Occupied, Seasonal, Vacant",
+    "occupancyFlag": false,
+    "county": "county name",
+    "policyPeriod": "start - end dates",
+    "protectionClass": "ISO class or Not Specified",
+    "secondaryWaterResistance": "status or Not Specified",
+    "openingProtection": "designation or Not Specified"
+  },
+  "carrier": {
+    "carrierName": "full carrier name from policy",
+    "agentName": "name or Not Specified",
+    "agentLocation": "location or Not Specified",
+    "agentPhone": "phone or Not Specified",
+    "premium": "annual premium or Not Specified",
+    "premiumBreakdown": "details or Not Specified"
+  },
+  "mortgagees": [
+    { "label": "1st Mortgagee", "value": "name - loan # - escrow status" }
+  ],
+  "endorsements": {
+    "critical": ["Form name + number + why it matters"],
+    "warn": ["Form name + number + condition"],
+    "standard": ["Form name + number"]
+  },
+  "exclusionsGapsLimitations": {
+    "gaps": ["coverage gaps"],
+    "limitations": ["things that reduce payout"],
+    "exclusions": ["things not covered - quote specific language"]
+  },
+  "legalStatutory": {
+    "statuteOfLimitations": "SOL with deadline if calculable",
+    "appraisalClause": "FULL QUOTED TEXT from policy",
+    "suitAgainstUs": "FULL QUOTED TEXT from policy",
+    "euoRequirements": "EUO obligations"
+  },
+  "flags": [
+    { "variant": "red", "content": "description" }
+  ],
+  "missing": ["items not found in the document"],
+  "agenticNotes": [
+    { "title": "observation title", "content": "detailed observation" }
+  ],
+  "reviewMeta": {
+    "reviewer": "CCS Policy Pro",
+    "sourcePages": 47,
+    "generatedDate": "YYYY-MM-DD"
+  },
+  "handoff": {
+    "to": "Scope PRO",
+    "content": "summary paragraph: insured, address, carrier, policy type, key limits, deductible, roof info, flags"
+  }
+}`;
+
+// Map of which PRO keys use which Claude model
+const PRO_MODEL_MAP = {
+  policy: 'claude-sonnet-4-5-20250929',   // extraction
+  scope: 'claude-sonnet-4-5-20250929',    // extraction
+  strategy: 'claude-opus-4-6',            // strategy
+  denial: 'claude-opus-4-6',              // strategy
+  newClaim: 'claude-opus-4-6',            // strategy
+  lossBelow: 'claude-opus-4-6',           // strategy
+  undisputed: 'claude-opus-4-6',          // strategy
+  spol: 'claude-sonnet-4-5-20250929',     // extraction
+  state: 'claude-sonnet-4-5-20250929',    // extraction
+};
+
+// System prompt map — only Policy PRO for now, others added as built
+const PRO_SYSTEM_PROMPTS = {
+  policy: POLICY_PRO_SYSTEM_PROMPT,
+};
+
+async function runPolicyPro(claimData, files) {
+  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your-api-key-here') {
+    throw new Error('ANTHROPIC_API_KEY not configured. Add your key to the .env file.');
+  }
+
+  const claim = claimData.claim || {};
+
+  // Build content blocks for Claude
+  const content = [];
+
+  // Add uploaded files as documents/images
+  for (const file of files) {
+    const fileData = fs.readFileSync(file.path);
+    const base64 = fileData.toString('base64');
+    const ext = path.extname(file.originalname).toLowerCase();
+
+    if (ext === '.pdf') {
+      content.push({
+        type: 'document',
+        source: { type: 'base64', media_type: 'application/pdf', data: base64 }
+      });
+    } else if (['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext)) {
+      const mediaMap = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' };
+      content.push({
+        type: 'image',
+        source: { type: 'base64', media_type: mediaMap[ext], data: base64 }
+      });
+    }
+  }
+
+  // Add the instruction with claim context
+  content.push({
+    type: 'text',
+    text: [
+      'Analyze this insurance policy document and return the structured JSON.',
+      '',
+      'Claim context:',
+      '- Insured: ' + (claim.insured || 'Unknown'),
+      '- Property: ' + (claim.address || 'Unknown'),
+      '- Carrier: ' + (claim.carrier || 'Unknown'),
+      '- Policy #: ' + (claim.policyNumber || 'Unknown'),
+      '- Claim #: ' + (claim.claimNumber || 'Unknown'),
+      '- Date of Loss: ' + (claim.dateOfLoss || 'Unknown'),
+    ].join('\n')
+  });
+
+  console.log('[Policy PRO] Sending to Claude API...');
+  console.log('[Policy PRO] Files:', files.map(f => f.originalname).join(', '));
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: PRO_MODEL_MAP.policy,
+      max_tokens: 16384,
+      system: POLICY_PRO_SYSTEM_PROMPT,
+      messages: [{ role: 'user', content }],
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    console.error('[Policy PRO] API error:', response.status, errText);
+    throw new Error('Claude API error (' + response.status + '): ' + errText.substring(0, 200));
+  }
+
+  const result = await response.json();
+  const text = result.content[0].text;
+
+  console.log('[Policy PRO] Response received. Tokens: input=' + result.usage?.input_tokens + ' output=' + result.usage?.output_tokens);
+
+  // Parse JSON from response
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (e) {
+    // Try to extract from markdown code blocks
+    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      parsed = JSON.parse(jsonMatch[1]);
+    } else {
+      const objMatch = text.match(/\{[\s\S]*\}/);
+      if (objMatch) {
+        parsed = JSON.parse(objMatch[0]);
+      } else {
+        console.error('[Policy PRO] Could not parse JSON from response:', text.substring(0, 500));
+        throw new Error('Could not extract JSON from Claude response');
+      }
+    }
+  }
+
+  parsed.status = 'complete';
+
+  // Track API usage
+  parsed._meta = {
+    model: result.model,
+    inputTokens: result.usage?.input_tokens,
+    outputTokens: result.usage?.output_tokens,
+    processedAt: new Date().toISOString(),
+  };
+
+  console.log('[Policy PRO] Complete. Data saved.');
+  return parsed;
+}
+
 // ─── Shared Renderers ──────────────────────────────────────
 
 function renderFlag(f) {
@@ -226,23 +465,50 @@ function renderInfoCell(label, value, cls) {
 function renderPolicyBody(d) {
   const cov = d.coverage || {};
   const uw = d.underwriting || {};
+  const car = d.carrier || {};
+  const egl = d.exclusionsGapsLimitations || {};
+  const legal = d.legalStatutory || {};
+
+  // Handle both old (A, B, C, D) and new (coverageA, coverageB, etc.) field names
+  const covA = cov.coverageA || cov.A;
+  const covB = cov.coverageB || cov.B;
+  const covC = cov.coverageC || cov.C;
+  const covD = cov.coverageD || cov.D;
+
   const occValue = typeof uw.occupancy === 'object' ? uw.occupancy.value : uw.occupancy;
-  const occFlag = typeof uw.occupancy === 'object' && uw.occupancy.flag === 'warn';
+  const occFlag = (typeof uw.occupancy === 'object' && uw.occupancy.flag === 'warn') || uw.occupancyFlag;
 
   let html = '';
 
   // Coverage Limits
   html += '<div class="section-label">Coverage Limits</div>';
   html += '<div class="info-grid cols-4">';
-  html += renderInfoCell('Coverage A \u2014 Dwelling', cov.A);
-  html += renderInfoCell('Coverage B \u2014 Other Structures', cov.B);
-  html += renderInfoCell('Coverage C \u2014 Personal Property', cov.C);
-  html += renderInfoCell('Coverage D \u2014 Fair Rental Value', cov.D);
+  html += renderInfoCell('Coverage A \u2014 Dwelling', covA);
+  html += renderInfoCell('Coverage B \u2014 Other Structures', covB);
+  html += renderInfoCell('Coverage C \u2014 Personal Property', covC);
+  html += renderInfoCell('Coverage D \u2014 Fair Rental Value', covD);
+  if (cov.combinedTotal) html += renderInfoCell('Combined Total', cov.combinedTotal, 'highlight');
   html += renderInfoCell('Hurricane Deductible', cov.hurricaneDeductible, 'highlight');
+  if (cov.hurricaneDeductibleBasis) html += renderInfoCell('Deductible Basis', cov.hurricaneDeductibleBasis);
   html += renderInfoCell('AOP Deductible', cov.aopDeductible);
   html += renderInfoCell('Loss Settlement', cov.lossSettlement);
   html += renderInfoCell('Appraisal Clause', cov.appraisalClause ? '\u2713 ' + cov.appraisalClause : 'Not confirmed');
+  if (cov.fungiDeductible && cov.fungiDeductible !== 'Not Specified') html += renderInfoCell('Fungi/Mold', cov.fungiDeductible);
+  if (cov.waterBackupLimit && cov.waterBackupLimit !== 'Not Specified') html += renderInfoCell('Water Backup', cov.waterBackupLimit);
+  if (cov.premisesLiability && cov.premisesLiability !== 'Not Specified') html += renderInfoCell('Premises Liability', cov.premisesLiability);
   html += '</div>';
+
+  // Carrier Info
+  if (car.carrierName) {
+    html += '<div class="section-label">Insurance Carrier</div>';
+    html += '<div class="info-grid cols-3">';
+    html += renderInfoCell('Carrier', car.carrierName);
+    if (car.agentName && car.agentName !== 'Not Specified') html += renderInfoCell('Agent', car.agentName);
+    if (car.agentLocation && car.agentLocation !== 'Not Specified') html += renderInfoCell('Agent Location', car.agentLocation);
+    if (car.agentPhone && car.agentPhone !== 'Not Specified') html += renderInfoCell('Agent Phone', car.agentPhone);
+    if (car.premium && car.premium !== 'Not Specified') html += renderInfoCell('Premium', car.premium);
+    html += '</div>';
+  }
 
   // Underwriting
   html += '<div class="section-label">Property Underwriting</div>';
@@ -255,6 +521,7 @@ function renderPolicyBody(d) {
   html += renderInfoCell('Occupancy', occFlag ? occValue + ' \u26a0' : occValue, occFlag ? 'warn' : '');
   html += renderInfoCell('County / Territory', uw.county);
   html += renderInfoCell('Policy Period', uw.policyPeriod);
+  if (uw.roofAge) html += renderInfoCell('Roof Age at DOL', uw.roofAge + ' years');
   html += '</div>';
 
   // Mortgagees
@@ -275,10 +542,65 @@ function renderPolicyBody(d) {
   if (d.endorsements) {
     html += '<div class="section-label">Endorsements</div>';
     html += '<ul class="endorse-list">';
-    (d.endorsements.critical || []).forEach(e => { html += `<li class="critical">${esc(e)} \ud83d\udea8</li>`; });
+    (d.endorsements.critical || []).forEach(e => { html += `<li class="critical">${esc(e)}</li>`; });
     (d.endorsements.warn || []).forEach(e => { html += `<li class="warn">${esc(e)}</li>`; });
     (d.endorsements.standard || []).forEach(e => { html += `<li>${esc(e)}</li>`; });
     html += '</ul>';
+  }
+
+  // Exclusions / Gaps / Limitations
+  if (egl.gaps || egl.limitations || egl.exclusions) {
+    html += '<div class="section-label">Exclusions / Gaps / Limitations</div>';
+    if (egl.exclusions && egl.exclusions.length) {
+      html += '<div class="subsection-label">Exclusions</div>';
+      html += '<ul class="endorse-list">';
+      egl.exclusions.forEach(e => { html += `<li class="critical">${esc(e)}</li>`; });
+      html += '</ul>';
+    }
+    if (egl.limitations && egl.limitations.length) {
+      html += '<div class="subsection-label">Limitations</div>';
+      html += '<ul class="endorse-list">';
+      egl.limitations.forEach(l => { html += `<li class="warn">${esc(l)}</li>`; });
+      html += '</ul>';
+    }
+    if (egl.gaps && egl.gaps.length) {
+      html += '<div class="subsection-label">Coverage Gaps</div>';
+      html += '<ul class="endorse-list">';
+      egl.gaps.forEach(g => { html += `<li>${esc(g)}</li>`; });
+      html += '</ul>';
+    }
+  }
+
+  // Legal / Statutory
+  if (legal.statuteOfLimitations || legal.appraisalClause || legal.suitAgainstUs) {
+    html += '<div class="section-label">Legal / Statutory</div>';
+    html += '<div class="legal-items">';
+    if (legal.statuteOfLimitations) {
+      html += '<div class="legal-item"><div class="legal-label">Statute of Limitations</div><div class="legal-text">' + esc(legal.statuteOfLimitations) + '</div></div>';
+    }
+    if (legal.suitAgainstUs) {
+      html += '<div class="legal-item"><div class="legal-label">Suit Against Us</div><div class="legal-text"><em>' + esc(legal.suitAgainstUs) + '</em></div></div>';
+    }
+    if (legal.appraisalClause && legal.appraisalClause.length > 20) {
+      html += '<div class="legal-item"><div class="legal-label">Appraisal Clause</div><div class="legal-text"><em>' + esc(legal.appraisalClause) + '</em></div></div>';
+    }
+    if (legal.euoRequirements) {
+      html += '<div class="legal-item"><div class="legal-label">EUO Requirements</div><div class="legal-text">' + esc(legal.euoRequirements) + '</div></div>';
+    }
+    html += '</div>';
+  }
+
+  // Agentic Notes
+  if (d.agenticNotes && Array.isArray(d.agenticNotes) && d.agenticNotes.length) {
+    const hasContent = d.agenticNotes.some(n => n.title !== 'None');
+    if (hasContent) {
+      html += '<div class="section-label">Agentic Notes</div>';
+      html += '<div class="agentic-notes">';
+      d.agenticNotes.forEach((note, i) => {
+        html += '<div class="agentic-note"><div class="agentic-note-title">' + (i + 1) + '. ' + esc(note.title) + '</div><div class="agentic-note-content">' + esc(note.content) + '</div></div>';
+      });
+      html += '</div>';
+    }
   }
 
   // Missing
@@ -287,6 +609,16 @@ function renderPolicyBody(d) {
     html += '<ul class="missing-list">';
     d.missing.forEach(m => { html += `<li>${esc(m)}</li>`; });
     html += '</ul>';
+  }
+
+  // Review Meta
+  if (d.reviewMeta) {
+    html += '<div class="section-label">Review Data</div>';
+    html += '<div class="info-grid cols-3">';
+    html += renderInfoCell('Reviewer', d.reviewMeta.reviewer);
+    html += renderInfoCell('Source Pages', d.reviewMeta.sourcePages);
+    html += renderInfoCell('Generated', d.reviewMeta.generatedDate);
+    html += '</div>';
   }
 
   html += renderHandoff(d.handoff);
@@ -482,9 +814,52 @@ function renderActiveSection(pro, data) {
   </div>`;
 }
 
+function renderErrorSection(pro, data) {
+  return `
+  <div class="pro-section" id="${pro.id}" data-status="error">
+    <div class="pro-header ${pro.theme}" onclick="toggle('${pro.id}')">
+      <div class="pro-header-left">
+        <span class="pro-badge ${pro.bc}">${pro.badge}</span>
+        <div>
+          <div class="pro-title">${pro.title}</div>
+          <div class="pro-subtitle">Error during processing</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-error">Error</span>
+        ${CHEVRON}
+      </div>
+    </div>
+    <div class="pro-body">
+      <div class="error-message">${esc(data.error || 'An unknown error occurred during processing.')}</div>
+      <div class="error-hint">Try uploading the document again. Check that your API key is set in the .env file.</div>
+    </div>
+  </div>`;
+}
+
+function renderProcessingSection(pro) {
+  return `
+  <div class="pro-section" id="${pro.id}" data-status="processing">
+    <div class="pro-header ${pro.theme}">
+      <div class="pro-header-left">
+        <span class="pro-badge ${pro.bc}">${pro.badge}</span>
+        <div>
+          <div class="pro-title">${pro.title}</div>
+          <div class="pro-subtitle">Analyzing document...</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-active">Processing</span>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderSection(pro, pros) {
   const data = pros[pro.key];
   if (!data || data.status === 'pending') return renderPendingSection(pro);
+  if (data.status === 'error') return renderErrorSection(pro, data);
+  if (data.status === 'processing') return renderProcessingSection(pro);
   return renderActiveSection(pro, data);
 }
 
@@ -1046,39 +1421,62 @@ app.post('/new', (req, res) => {
 
 // ─── File Upload Route ─────────────────────────────────────
 
-app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), (req, res) => {
-  const filePath = path.join(CLAIMS_DIR, `${req.params.id}.json`);
-  if (!fs.existsSync(filePath)) {
-    return res.status(404).send('Claim not found');
+app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), async (req, res) => {
+  const claimPath = path.join(CLAIMS_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(claimPath)) {
+    return res.status(404).json({ success: false, error: 'Claim not found' });
   }
 
   const files = req.files || [];
   if (files.length === 0) {
-    return res.redirect(`/claim/${req.params.id}`);
+    return res.json({ success: true, redirect: `/claim/${req.params.id}` });
   }
 
-  // Update claim JSON to mark this step as active with uploaded files
+  const proKey = req.params.proKey;
+  let claim;
+
   try {
-    const claim = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    const proKey = req.params.proKey;
-
-    // Record the upload in the PRO step
-    if (!claim.pros[proKey]) {
-      claim.pros[proKey] = {};
-    }
-    claim.pros[proKey].status = 'active';
-    claim.pros[proKey].uploadedFiles = files.map(f => ({
-      originalName: f.originalname,
-      savedAs: f.filename,
-      size: f.size,
-      uploadedAt: new Date().toISOString(),
-    }));
-
-    fs.writeFileSync(filePath, JSON.stringify(claim, null, 2));
+    claim = JSON.parse(fs.readFileSync(claimPath, 'utf-8'));
   } catch (e) {
-    console.error('Error updating claim after upload:', e.message);
+    return res.status(500).json({ success: false, error: 'Could not read claim file' });
   }
 
+  // Record the upload
+  if (!claim.pros[proKey]) claim.pros[proKey] = {};
+  claim.pros[proKey].uploadedFiles = files.map(f => ({
+    originalName: f.originalname,
+    savedAs: f.filename,
+    size: f.size,
+    uploadedAt: new Date().toISOString(),
+  }));
+
+  // Run the PRO skill if we have an API handler for it
+  if (proKey === 'policy' && PRO_SYSTEM_PROMPTS[proKey]) {
+    claim.pros[proKey].status = 'processing';
+    fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+
+    try {
+      const result = await runPolicyPro(claim, files);
+      // Preserve the uploaded files list
+      result.uploadedFiles = claim.pros[proKey].uploadedFiles;
+      claim.pros[proKey] = result;
+      fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+    } catch (err) {
+      console.error('[Upload] PRO execution failed:', err.message);
+      claim.pros[proKey].status = 'error';
+      claim.pros[proKey].error = err.message;
+      fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+    }
+  } else {
+    // No API handler yet — just mark as active
+    claim.pros[proKey].status = 'active';
+    fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+  }
+
+  // Return JSON for fetch requests, redirect for regular form posts
+  if (req.headers['x-requested-with'] === 'fetch') {
+    return res.json({ success: true, redirect: `/claim/${req.params.id}` });
+  }
   res.redirect(`/claim/${req.params.id}`);
 });
 
