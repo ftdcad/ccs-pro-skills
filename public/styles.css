@@ -99,6 +99,8 @@ body {
   font-family: 'Inter', sans-serif;
 }
 .btn:hover { background: var(--border); }
+.btn-delete { border-color: #7f1d1d; color: #fca5a5; }
+.btn-delete:hover { background: #7f1d1d; color: #fff; }
 .toolbar-label {
   font-size: 12px;
   color: var(--text-dim);
@@ -713,4 +715,65 @@ table.scope-table .qty  {
 .processing-hint {
   font-size: 12px;
   color: var(--text-dim);
+}
+
+/* ── Supplemental Upload ── */
+.supplemental-upload {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--border);
+}
+.rerun-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.btn-rerun {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 22px;
+  border-radius: 8px;
+  border: 1px solid #2563eb;
+  background: #1e40af;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-rerun:hover { background: #2563eb; }
+.rerun-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.supplemental-hint {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.supplemental-files {
+  margin-bottom: 16px;
+}
+.supplemental-files-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.supplemental-dropzone {
+  padding: 20px 24px;
+}
+.supplemental-dropzone .dropzone-text {
+  font-size: 13px;
+}
+.supplemental-form .btn-upload {
+  background: #1e40af;
+  border-color: #2563eb;
+}
+.supplemental-form .btn-upload:hover {
+  background: #2563eb;
 }

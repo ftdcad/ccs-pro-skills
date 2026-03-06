@@ -199,35 +199,96 @@ const STEP_UPLOAD_PROMPTS = {
 
 // ─── Claude API Integration ─────────────────────────────────
 
-const POLICY_PRO_SYSTEM_PROMPT = `You are CCS Policy Pro™, a specialized insurance policy review system. You extract, analyze, and format insurance policy information into structured JSON for a claims management pipeline.
+const POLICY_PRO_SYSTEM_PROMPT = `You are operating as CCS Policy Pro™, a policy review system that extracts, analyzes, and formats insurance policy information into structured JSON for the CCS claims management pipeline.
 
-## Your Task
-Read the uploaded insurance policy document completely — every page, every endorsement, every amendment. Extract all data into the JSON schema provided below.
+This is not a conversation. This is a document production workflow. Every policy review produces a structured extraction with standardized sections. No deviation, no improvisation, no paraphrasing of coverage language.
 
-## Extraction Rules
-1. EXTRACT FROM SOURCE ONLY. Every data point comes from the policy document. If information isn't in the document, use "Not Specified" for strings or null for numbers.
-2. QUOTE POLICY LANGUAGE EXACTLY for exclusions, endorsements, appraisal clauses, and suit clauses. Paraphrasing changes legal meaning.
-3. READ EVERY PAGE. Policies bury critical language in endorsements, amendments, and riders that override the declarations page.
-4. SCAN ALL ENDORSEMENTS AND AMENDMENTS. Look for: matching endorsements, cosmetic damage exclusions, roof payment schedules (ACV by age), right to repair clauses, ACV endorsements, wind/hail sublimits or exclusions, and any language that reduces coverage from what the dec page suggests.
-5. IDENTIFY EXCLUSIONS AND GAPS. Quote the specific language. Flag anything the carrier could use to deny or underpay. Pay special attention to: sand damage coverage, ensuing loss language, and ambiguous provisions.
-6. CHECK LEGAL PROVISIONS. Appraisal clause (full text), suit against us clause, statute of limitations.
-7. EVERY ENDORSEMENT gets a plain-English explanation, not just the form number.
+## Core Rules
 
-## Flag Variants
-- red: Immediate risk to claim — occupancy issues, roof age triggering depreciation, coverage voids
-- yellow: Caution — policy type nuances, low sublimits, endorsement risks
-- blue: Informational — strategic leverage, appraisal clause available, burden of proof on carrier
-- green: Confirmed positive — coverage verified, policy active on DOL, RCV confirmed
+- EXTRACT FROM SOURCE ONLY. Every data point comes from the policy document. If information isn't in the document, use "Not Specified" for strings or null for numbers. Never guess, generalize, or assume.
+- QUOTE POLICY LANGUAGE EXACTLY for exclusions, endorsements, appraisal clauses, and suit clauses. Paraphrasing changes legal meaning.
+- READ EVERY PAGE. Policies bury critical language in endorsements, amendments, and riders that override the declarations page.
+- If language is unclear, note: "Clarification Needed — language unclear."
+
+## The Extraction Process
+
+Follow these steps in order:
+
+1. **Read the entire document cover to cover.** Every page. Do not skip or skim.
+
+2. **Extract the declarations page first.** Named insured, property address, carrier, policy period, agent info, coverage limits (A/B/C/D), deductibles. This is the skeleton of the report.
+
+3. **Scan ALL endorsements and amendments.** These modify the base policy. Look specifically for:
+   - Matching endorsements (does carrier owe matching of undamaged materials?)
+   - Cosmetic damage exclusions (hail damage to metal roofs, gutters, etc.)
+   - Roof payment schedules (ACV by roof age — carriers use these to drastically reduce payment)
+   - Right to repair clauses (carrier can choose to repair instead of pay)
+   - ACV endorsements (overrides RCV on specific items)
+   - Wind/hail sublimits or separate deductibles
+   - Any language that REDUCES coverage from what the declarations page suggests
+
+4. **Identify exclusions and gaps.** Quote the specific policy language — do not summarize. Flag anything the carrier could use to deny or underpay. Pay special attention to:
+   - Sand damage coverage — what section does it fall under? Is it covered?
+   - Ensuing loss language — storm/wind creating an opening, what follows?
+   - Ambiguous provisions that need clarification
+   - Mold/fungi coverage limits
+   - Ordinance or law coverage
+   - Water damage scope and limitations
+
+5. **Check legal/statutory provisions.** Extract the FULL TEXT (not summaries) of:
+   - Appraisal clause
+   - Suit Against Us clause
+   - Statute of limitations
+   - EUO requirements (Is insured required? Note: PAs cannot be compelled to EUO but may be subpoenaed for records or deposition in litigation)
+
+6. **Generate strategic analysis (Agentic Notes).** After extraction, add numbered strategic observations. These are insights an experienced public adjuster would flag:
+   - Policy type analysis — DP-3 vs HO-3 implications, named peril vs open peril differences, what's covered vs what's excluded by policy form
+   - Coverage gap warnings — Coverage C unusually low relative to dwelling, missing Loss of Use, inadequate Other Structures for the property
+   - Endorsement impact — plain-English explanation of what each critical endorsement actually means for THIS claim (not generic definitions)
+   - Exclusion risks — anything that could be used to deny or limit the claim
+   - Property red flags — age of roof vs roof coverage, seasonal/tenant occupancy conflicts, prior claims history if visible
+   - Valuation context — Coverage A vs apparent property value, underinsurance risk
+   - Contradictions between declarations page and endorsements
+   - Missing documents or pages that appear to be absent from the provided policy
+   - Unusual or carrier-specific provisions that differ from standard ISO forms
+   - Anything that would make an experienced PA say "that's weird" or "watch out for that"
+
+## Supplemental Documents
+
+If an EagleView, Hover, or other roof measurement report is provided alongside the policy:
+- Extract roof measurements: total squares, predominant pitch, ridge/hip/valley lengths, facet count
+- Cross-reference roof data with policy underwriting info (roof year, roof type, SWR status)
+- Include measurement data in the underwriting section where applicable
+- Flag any discrepancies between what the policy says about the roof and what the measurement report shows
+- Note waste factor implications for the estimate
 
 ## Endorsement Classification
-- critical: Endorsements that DIRECTLY affect claim outcome — form name + number + plain-English why it matters
-- warn: Endorsements that MAY limit coverage under certain conditions
-- standard: Routine endorsements (state changes, deductible forms, etc.)
 
-## Agentic Notes
-After extraction, add strategic observations: policy type analysis (DP-3 vs HO-3, named vs open peril), coverage gap warnings, endorsement impact in plain English, exclusion risks, property red flags. If nothing notable, use [{"title": "None", "content": "No additional observations."}].
+- critical: Endorsements that DIRECTLY affect claim outcome — include form name + number + plain-English explanation of WHY it matters for this specific claim
+- warn: Endorsements that MAY limit coverage under certain conditions — include the triggering condition
+- standard: Routine endorsements (state changes, deductible forms, etc.) — form name + number
+
+EVERY endorsement gets a plain-English explanation, not just the form number. Adjusters need to understand what each endorsement means without looking it up.
+
+## Flag Variants
+
+- red: Immediate risk to claim — occupancy issues, roof age triggering depreciation schedules, coverage voids, policy expired on DOL
+- yellow: Caution — policy type nuances (DP-3 named peril limits), low sublimits, endorsement risks, seasonal occupancy
+- blue: Informational — strategic leverage available, appraisal clause present, burden of proof on carrier, matching endorsement found
+- green: Confirmed positive — coverage verified for this peril, policy active on DOL, RCV confirmed, favorable endorsements
+
+## Mandatory Checks (do these on EVERY policy)
+
+- Sand damage / ensuing loss language search — always check for this language
+- Every endorsement gets a plain-English explanation
+- Full appraisal clause text (not a summary — quote the entire clause)
+- Full Suit Against Us clause text (not a summary — quote the entire clause)
+- Roof age calculation (year built or roof year vs DOL)
+- Coverage A vs B vs C vs D ratio analysis
+- Deductible basis verification (percentage of what? Coverage A? Building value?)
 
 ## Output
+
 Return ONLY a valid JSON object. No markdown, no code blocks, no explanation text. Just the raw JSON.
 
 The JSON MUST match this structure:
@@ -275,27 +336,27 @@ The JSON MUST match this structure:
     { "label": "1st Mortgagee", "value": "name - loan # - escrow status" }
   ],
   "endorsements": {
-    "critical": ["Form name + number + why it matters"],
-    "warn": ["Form name + number + condition"],
-    "standard": ["Form name + number"]
+    "critical": ["Form name + number + plain-English explanation of why it matters for this claim"],
+    "warn": ["Form name + number + triggering condition"],
+    "standard": ["Form name + number + brief description"]
   },
   "exclusionsGapsLimitations": {
-    "gaps": ["coverage gaps"],
-    "limitations": ["things that reduce payout"],
-    "exclusions": ["things not covered - quote specific language"]
+    "gaps": ["coverage gaps with quoted policy language"],
+    "limitations": ["things that reduce payout with quoted policy language"],
+    "exclusions": ["things not covered — QUOTE the specific exclusion language from the policy"]
   },
   "legalStatutory": {
-    "statuteOfLimitations": "SOL with deadline if calculable",
-    "appraisalClause": "FULL QUOTED TEXT from policy",
-    "suitAgainstUs": "FULL QUOTED TEXT from policy",
-    "euoRequirements": "EUO obligations"
+    "statuteOfLimitations": "SOL with deadline if calculable from DOL",
+    "appraisalClause": "FULL QUOTED TEXT from policy — every word of the clause",
+    "suitAgainstUs": "FULL QUOTED TEXT from policy — every word of the clause",
+    "euoRequirements": "EUO obligations — is insured required? PA requirements?"
   },
   "flags": [
-    { "variant": "red", "content": "description" }
+    { "variant": "red|yellow|blue|green", "content": "Short title — detailed explanation" }
   ],
-  "missing": ["items not found in the document"],
+  "missing": ["items not found in the document that would be expected in a complete policy"],
   "agenticNotes": [
-    { "title": "observation title", "content": "detailed observation" }
+    { "title": "numbered observation title", "content": "detailed strategic observation — what it means for the claim and what to watch for" }
   ],
   "reviewMeta": {
     "reviewer": "CCS Policy Pro",
@@ -304,13 +365,13 @@ The JSON MUST match this structure:
   },
   "handoff": {
     "to": "Scope PRO",
-    "content": "summary paragraph: insured, address, carrier, policy type, key limits, deductible, roof info, flags"
+    "content": "summary paragraph: insured, address, carrier, policy type, key coverage limits, deductible structure, roof info, and any red/yellow flags that affect scope"
   }
 }`;
 
 // Map of which PRO keys use which Claude model
 const PRO_MODEL_MAP = {
-  policy: 'claude-sonnet-4-5-20250929',   // extraction
+  policy: 'claude-opus-4-6',              // extraction + strategic analysis
   scope: 'claude-sonnet-4-5-20250929',    // extraction
   strategy: 'claude-opus-4-6',            // strategy
   denial: 'claude-opus-4-6',              // strategy
@@ -787,11 +848,61 @@ function renderPendingSection(pro) {
   </div>`;
 }
 
-function renderActiveSection(pro, data) {
+function renderSupplementalUpload(proKey, claimId, data) {
+  if (!claimId) return '';
+  const uploadedFiles = data.uploadedFiles || [];
+  const accept = '.pdf,.docx,.doc,.png,.jpg,.jpeg,.zip';
+
+  let filesHTML = '';
+  if (uploadedFiles.length) {
+    filesHTML = '<div class="supplemental-files"><div class="supplemental-files-label">Uploaded Documents</div>';
+    uploadedFiles.forEach(f => {
+      const size = f.size < 1024 * 1024
+        ? Math.round(f.size / 1024) + ' KB'
+        : (f.size / (1024 * 1024)).toFixed(1) + ' MB';
+      filesHTML += `<div class="file-item"><span>${esc(f.originalName)}</span><span class="file-size">${size}</span></div>`;
+    });
+    filesHTML += '</div>';
+  }
+
+  return `
+      <div class="supplemental-upload">
+        ${filesHTML}
+        <div class="rerun-row">
+          <button class="btn-rerun" onclick="rerunPro('${esc(claimId)}', '${esc(proKey)}')">Re-run Analysis</button>
+          <span class="rerun-hint">Re-process existing documents with latest settings</span>
+        </div>
+        <div class="section-label" style="margin-top:24px;">Add Supplemental Documents</div>
+        <div class="supplemental-hint">Upload additional documents (EagleView, photos, carrier letters) to re-run this analysis with more data.</div>
+        <form class="upload-form supplemental-form" action="/claim/${esc(claimId)}/upload/${esc(proKey)}" method="POST" enctype="multipart/form-data">
+          <label class="upload-dropzone supplemental-dropzone" id="dropzone-${esc(proKey)}">
+            <input type="file" name="documents" multiple accept="${accept}" onchange="updateFileList(this, '${esc(proKey)}')">
+            <div class="dropzone-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+            </div>
+            <div class="dropzone-text">Drop files here or click to browse</div>
+            <div class="dropzone-accept">${accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', ')}</div>
+          </label>
+          <div class="file-list" id="fileList-${esc(proKey)}"></div>
+          <button type="submit" class="btn-upload" id="uploadBtn-${esc(proKey)}" style="display:none;">Re-analyze with supplemental documents</button>
+        </form>
+      </div>`;
+}
+
+function renderActiveSection(pro, data, claimId) {
   const status = data.status === 'complete' ? 'complete' : 'active';
   const label = status === 'complete' ? 'Complete' : 'In Progress';
   const pillClass = status === 'complete' ? 'status-complete' : 'status-active';
   const subtitle = data.subtitle || pro.sub;
+
+  // Show supplemental upload on completed steps that have API handlers
+  const supplementalHTML = (status === 'complete' && PRO_SYSTEM_PROMPTS[pro.key])
+    ? renderSupplementalUpload(pro.key, claimId, data)
+    : '';
 
   return `
   <div class="pro-section" id="${pro.id}" data-status="${status}">
@@ -810,6 +921,7 @@ function renderActiveSection(pro, data) {
     </div>
     <div class="pro-body">
       ${renderProBody(pro.key, data)}
+      ${supplementalHTML}
     </div>
   </div>`;
 }
@@ -855,12 +967,12 @@ function renderProcessingSection(pro) {
   </div>`;
 }
 
-function renderSection(pro, pros) {
+function renderSection(pro, pros, claimId) {
   const data = pros[pro.key];
   if (!data || data.status === 'pending') return renderPendingSection(pro);
   if (data.status === 'error') return renderErrorSection(pro, data);
   if (data.status === 'processing') return renderProcessingSection(pro);
-  return renderActiveSection(pro, data);
+  return renderActiveSection(pro, data, claimId);
 }
 
 function renderConnector() {
@@ -869,14 +981,14 @@ function renderConnector() {
 
 // ─── Branch Row ────────────────────────────────────────────
 
-function renderBranchRow(pros) {
+function renderBranchRow(pros, claimId) {
   let html = '<div class="branch-row">';
   BRANCH_PROS.forEach(bp => {
     const data = pros[bp.key];
     if (!data || data.status === 'pending') {
       html += renderPendingSection(bp);
     } else {
-      html += renderActiveSection(bp, data);
+      html += renderActiveSection(bp, data, claimId);
     }
   });
   html += '</div>';
@@ -916,6 +1028,9 @@ function renderChainPage(claim) {
   const m = claim.meta || {};
   const pros = claim.pros || {};
 
+  // Claim ID for routes
+  const claimId = m.claimNumber ? m.claimNumber.replace(/[^a-zA-Z0-9_-]/g, '_') : 'unknown';
+
   // Count progress
   let total = 0, done = 0;
   PRO_CHAIN.forEach(p => { if (typeof p === 'object') { total++; const d = pros[p.key]; if (d && d.status === 'complete') done++; } });
@@ -927,17 +1042,16 @@ function renderChainPage(claim) {
   PRO_CHAIN.forEach(item => {
     if (item === 'branch') {
       chainHTML += renderConnector();
-      chainHTML += renderBranchRow(pros);
+      chainHTML += renderBranchRow(pros, claimId);
       return;
     }
     if (!first) chainHTML += renderConnector();
-    chainHTML += renderSection(item, pros);
+    chainHTML += renderSection(item, pros, claimId);
     first = false;
   });
 
   // Detect current step for upload prompt
   const currentStep = getCurrentStep(pros);
-  const claimId = m.claimNumber ? m.claimNumber.replace(/[^a-zA-Z0-9_-]/g, '_') : 'unknown';
   let uploadPromptHTML = '';
   if (currentStep) {
     const prompt = STEP_UPLOAD_PROMPTS[currentStep.key] || {
@@ -1003,6 +1117,7 @@ function renderChainPage(claim) {
   <button class="btn" onclick="expandAll()">Expand All</button>
   <button class="btn" onclick="collapseAll()">Collapse All</button>
   <a href="/" class="btn" style="text-decoration:none;">&larr; Dashboard</a>
+  <button class="btn btn-delete" onclick="deleteClaim('${esc(claimId)}')">Delete Claim</button>
   <span class="toolbar-label">${done} / ${total} steps complete</span>
 </div>
 
@@ -1441,14 +1556,38 @@ app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), async (req,
     return res.status(500).json({ success: false, error: 'Could not read claim file' });
   }
 
-  // Record the upload
+  // Check if this is a supplemental upload (step already has data)
+  const isSupplemental = claim.pros[proKey] && claim.pros[proKey].status === 'complete';
+  const existingFiles = (claim.pros[proKey] && claim.pros[proKey].uploadedFiles) || [];
+
+  // Record the upload — combine with existing files if supplemental
   if (!claim.pros[proKey]) claim.pros[proKey] = {};
-  claim.pros[proKey].uploadedFiles = files.map(f => ({
+  const newFileRecords = files.map(f => ({
     originalName: f.originalname,
     savedAs: f.filename,
     size: f.size,
     uploadedAt: new Date().toISOString(),
   }));
+  claim.pros[proKey].uploadedFiles = isSupplemental
+    ? [...existingFiles, ...newFileRecords]
+    : newFileRecords;
+
+  // Build the full file list for API call (old files from disk + new files)
+  let allFiles = [...files]; // new files from multer
+  if (isSupplemental && existingFiles.length) {
+    const claimUploadDir = path.join(UPLOADS_DIR, req.params.id);
+    for (const ef of existingFiles) {
+      const oldPath = path.join(claimUploadDir, ef.savedAs);
+      if (fs.existsSync(oldPath)) {
+        allFiles.unshift({
+          path: oldPath,
+          originalname: ef.originalName,
+          size: ef.size,
+        });
+      }
+    }
+    console.log(`[Upload] Supplemental: ${existingFiles.length} existing + ${files.length} new = ${allFiles.length} total files`);
+  }
 
   // Run the PRO skill if we have an API handler for it
   if (proKey === 'policy' && PRO_SYSTEM_PROMPTS[proKey]) {
@@ -1456,8 +1595,8 @@ app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), async (req,
     fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
 
     try {
-      const result = await runPolicyPro(claim, files);
-      // Preserve the uploaded files list
+      const result = await runPolicyPro(claim, allFiles);
+      // Preserve the combined uploaded files list
       result.uploadedFiles = claim.pros[proKey].uploadedFiles;
       claim.pros[proKey] = result;
       fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
@@ -1478,6 +1617,91 @@ app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), async (req,
     return res.json({ success: true, redirect: `/claim/${req.params.id}` });
   }
   res.redirect(`/claim/${req.params.id}`);
+});
+
+// ─── Re-run PRO Step ───────────────────────────────────────
+
+app.post('/claim/:id/rerun/:proKey', async (req, res) => {
+  const claimPath = path.join(CLAIMS_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(claimPath)) {
+    return res.status(404).json({ success: false, error: 'Claim not found' });
+  }
+
+  const proKey = req.params.proKey;
+  let claim;
+  try {
+    claim = JSON.parse(fs.readFileSync(claimPath, 'utf-8'));
+  } catch (e) {
+    return res.status(500).json({ success: false, error: 'Could not read claim file' });
+  }
+
+  const existingFiles = (claim.pros[proKey] && claim.pros[proKey].uploadedFiles) || [];
+  if (existingFiles.length === 0) {
+    return res.status(400).json({ success: false, error: 'No uploaded files to re-process' });
+  }
+
+  // Build file list from disk
+  const claimUploadDir = path.join(UPLOADS_DIR, req.params.id);
+  const allFiles = [];
+  for (const ef of existingFiles) {
+    const filePath = path.join(claimUploadDir, ef.savedAs);
+    if (fs.existsSync(filePath)) {
+      allFiles.push({
+        path: filePath,
+        originalname: ef.originalName,
+        size: ef.size,
+      });
+    }
+  }
+
+  if (allFiles.length === 0) {
+    return res.status(400).json({ success: false, error: 'Uploaded files not found on disk' });
+  }
+
+  console.log(`[Re-run] ${proKey} for claim ${req.params.id} with ${allFiles.length} files`);
+
+  // Re-run the PRO
+  if (proKey === 'policy' && PRO_SYSTEM_PROMPTS[proKey]) {
+    claim.pros[proKey].status = 'processing';
+    fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+
+    try {
+      const result = await runPolicyPro(claim, allFiles);
+      result.uploadedFiles = existingFiles;
+      claim.pros[proKey] = result;
+      fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+    } catch (err) {
+      console.error('[Re-run] PRO execution failed:', err.message);
+      claim.pros[proKey].status = 'error';
+      claim.pros[proKey].error = err.message;
+      fs.writeFileSync(claimPath, JSON.stringify(claim, null, 2));
+    }
+  } else {
+    return res.status(400).json({ success: false, error: 'No API handler for ' + proKey });
+  }
+
+  res.json({ success: true, redirect: `/claim/${req.params.id}` });
+});
+
+// ─── Delete Claim ──────────────────────────────────────────
+
+app.delete('/claim/:id', (req, res) => {
+  const claimPath = path.join(CLAIMS_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(claimPath)) {
+    return res.status(404).json({ success: false, error: 'Claim not found' });
+  }
+
+  // Delete claim JSON
+  fs.unlinkSync(claimPath);
+
+  // Delete uploaded files if they exist
+  const uploadDir = path.join(UPLOADS_DIR, req.params.id);
+  if (fs.existsSync(uploadDir)) {
+    fs.rmSync(uploadDir, { recursive: true });
+  }
+
+  console.log(`[Delete] Claim ${req.params.id} deleted`);
+  res.json({ success: true });
 });
 
 // ─── Claim View ────────────────────────────────────────────

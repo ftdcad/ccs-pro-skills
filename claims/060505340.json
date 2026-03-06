@@ -270,6 +270,17 @@
           "uploadedAt": "2026-03-06T17:51:57.015Z"
         }
       ]
+    },
+    "scope": {
+      "uploadedFiles": [
+        {
+          "originalName": "pro_premium_measurements (1).pdf",
+          "savedAs": "1772819955893-pro_premium_measurements__1_.pdf",
+          "size": 1918569,
+          "uploadedAt": "2026-03-06T17:59:15.902Z"
+        }
+      ],
+      "status": "active"
     }
   }
 }

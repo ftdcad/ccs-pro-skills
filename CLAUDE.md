@@ -1,7 +1,7 @@
 # 15-Day Cycle — CCS Claims AI Pipeline
 
 ## READ FIRST
-Open `CONTEXT.md` for full project state, session log, and what's not done yet.
+Open `HANDOFF-MAR6-SESSION5.md` for latest session state, then `CONTEXT.md` for full project history.
 
 ## What This Is
 Rebuilding CCS's claims processing AI pipeline. Originally custom GPTs on ChatGPT (GPT-4.0). GPT model upgrades broke them. Rebuilding with Claude API, delivered through the existing Coastal AI portal page.
@@ -11,7 +11,7 @@ Rebuilding CCS's claims processing AI pipeline. Originally custom GPTs on ChatGP
 - **Backend**: Claude API (decided Feb 23 after head-to-head test — Claude quality >> GPT)
 - **Users**: Field adjusters, non-technical. Upload doc, get report. That's it.
 - **PDF handling**: Insurance policies are scanned image-based PDFs. Need PDF->image->Claude Vision pipeline.
-- **Model strategy**: Sonnet for extraction (Policy Pro, Scope Pro, SPOL). Opus for strategy (Denial Pro, Strategy Pro, Loss Below).
+- **Model strategy**: Opus for Policy Pro (extraction + strategic analysis — quality gap too big with Sonnet). Sonnet for Scope Pro, SPOL. Opus for strategy (Denial Pro, Strategy Pro, Loss Below).
 - **Source prompts**: `C:\Users\FrankDalton\Desktop\desk\01_AI_Prompts_CCS_Pro\`
 - **Communication tone**: Know the law, never cite it. No statute numbers in carrier correspondence. Internal docs can cite freely.
 - **BINGO rule**: Frank says BINGO before any code changes. Design talk is free, building is gated.
@@ -57,8 +57,11 @@ Policy PRO -> Scope PRO -> Estimating (human) -> Strategy PRO -> (Denial / New C
 - Use GSD framework with parallel agents for independent work
 - Skills first, orchestrator LAST
 
-## Current Status (Mar 4, 2026)
-- 10 skill specs written and saved (8 linear + 2 conditional/support)
-- State reference data extracted from Merlin guides (13 states + matching chart)
-- Git commits made this session
-- NEXT: 15 Day Pro, Formal Demand, 30 Day, then remaining day-interval specs
+## Current Status (Mar 6, 2026)
+- 10 skill specs + 10 JSON schemas + API sketch V1 & V2
+- **Express app (server.js) is the live chain viewer** — `node server.js` → http://localhost:3000
+- ClaimWizard paste extraction working (new claim form)
+- Policy Pro upload + Claude API integration working (switched to Opus for quality)
+- Session 4 added: enhanced system prompt, supplemental upload, re-run analysis, delete claim, drag-and-drop fix
+- **Bug fixed Session 5**: `claimId` variable used before declaration in `renderChainPage()` — caused white page on claims
+- NEXT: Test Opus quality on Policy Pro re-run, fix multi-file drag-and-drop, remaining skill specs (15 Day, Formal Demand, 30 Day, 45/60/75/90 Day)

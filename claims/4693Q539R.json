@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "claimNumber": "4693Q539R",
+    "lastName": "Jaroma",
+    "generatedDate": "2026-03-06"
+  },
+  "claim": {
+    "insured": "Nicholas & Mary Jaroma",
+    "address": "1117 Ashby St, Front Royal, VA 22630-6444",
+    "carrier": "State Farm Insurance Company",
+    "policyNumber": "46-C5-E450-2",
+    "claimNumber": "4693Q539R",
+    "dateOfLoss": "3/16/2025 — Hail",
+    "peril": "Hail",
+    "policyType": "",
+    "fileStatus": "CTG - New Claim"
+  },
+  "pros": {
+    "policy": {
+      "status": "complete",
+      "coverage": {
+        "coverageA": "$245,300",
+        "coverageB": "$183,975",
+        "coverageC": "$73,590",
+        "coverageD": "Not Specified",
+        "combinedTotal": "$502,865",
+        "hurricaneDeductible": "Not Applicable",
+        "hurricaneDeductibleBasis": "Not Applicable",
+        "aopDeductible": "$1,226",
+        "fungiDeductible": "Not Specified",
+        "waterBackupLimit": "$12,265 (5% of Coverage A)",
+        "premisesLiability": "$300,000",
+        "lossSettlement": "Replacement Cost - Similar Construction (A1)",
+        "appraisalClause": "present"
+      },
+      "underwriting": {
+        "yearBuilt": 2009,
+        "sqFootage": "Not Specified",
+        "roofYear": 2009,
+        "roofAge": 16,
+        "roofType": "Composition Shingle",
+        "construction": "Frame",
+        "occupancy": "Owner Occupied",
+        "occupancyFlag": false,
+        "county": "Not Specified",
+        "policyPeriod": "APR 23 2024 to APR 23 2025",
+        "protectionClass": "Not Specified",
+        "secondaryWaterResistance": "Not Specified",
+        "openingProtection": "Not Specified"
+      },
+      "carrier": {
+        "carrierName": "State Farm Fire and Casualty Company",
+        "agentName": "Powers Insurance Agency Inc",
+        "agentLocation": "135 N Royal Ave, Front Royal VA 22630-2663",
+        "agentPhone": "(540) 635-2825",
+        "premium": "$702.00",
+        "premiumBreakdown": "Adjusted by: Utility Rating Credit, Home/Auto Discount, Claim Record Discount, Loyal Customer"
+      },
+      "mortgagees": [
+        {
+          "label": "1st Mortgagee",
+          "value": "Flagstar Bank ISAOA/ATIMA - Loan #0441066842 - PO Box 7646 Springfield OH 45501-7646 - Escrow Active"
+        }
+      ],
+      "endorsements": {
+        "critical": [
+          "HO-2735 - Back-Up of Sewer or Drain - 5% of Coverage A ($12,265) - Water backup from sewers/drains/sump pumps covered up to limit. This is ADDITIONAL coverage over standard policy exclusions.",
+          "Option OL - Building Ordinance or Law 10% ($24,530) - Pays for increased cost to rebuild due to code upgrades after covered loss. Critical for code compliance post-loss.",
+          "Option ID - Increased Dwelling Limit up to $49,060 - Provides extended replacement cost if actual repair/replacement exceeds Coverage A limit. Protects against underinsurance."
+        ],
+        "warn": [
+          "Option JF - Jewelry and Furs $2,500/$5,000 - Separate sublimit; standard policy jewelry theft limit is $1,500. May still be inadequate for high-value items."
+        ],
+        "standard": [
+          "HW-2146.1 - State Farm Homeowners Policy (Virginia edition)",
+          "Inflation Coverage Index 340.5 - Automatic adjustment of limits based on construction cost inflation"
+        ]
+      },
+      "exclusionsGapsLimitations": {
+        "gaps": [
+          "Flood coverage excluded - standard exclusion but property in VA may have flood risk. Endorsement HO-2735 clarifies sewer backup does NOT include flood; separate NFIP policy required.",
+          "Earthquake excluded unless purchased by endorsement - no earthquake coverage indicated on this policy."
+        ],
+        "limitations": [
+          "AOP Deductible $1,226 (1/2% of Coverage A) - applies to hail loss on 3/16/2025",
+          "Theft sublimits: $2,500 firearms, $1,500 jewelry (unless endorsed), $200 money/coins, $1,500 securities",
+          "Business property limited to $1,500 on premises, $750 off premises (no business occupancy endorsement active)"
+        ],
+        "exclusions": [
+          "SECTION I - LOSSES NOT INSURED, Item 1.e.: 'vandalism, malicious mischief, or breakage of glass if the dwelling is a vacant dwelling' - policy VOID for vandalism/theft if vacant >30 days without precautions",
+          "SECTION I - LOSSES NOT INSURED, Item 2.c.: 'Water, meaning: (1) flood; (2) surface water... (7) water or sewage from outside the residence premises plumbing system that enters through sewers or drains...' - Standard water exclusion; backup coverage added by HO-2735 endorsement as exception",
+          "SECTION I - LOSSES NOT INSURED, Item 2.b.: 'Earth Movement, meaning... earthquake; landslide, mudslide, or mudflow; sinkhole or subsidence...' - No earth movement coverage",
+          "SECTION II - EXCLUSIONS, Item 1.a.: Bodily injury or property damage 'that was intended by the insured or would have been expected by the insured based on a reasonable person standard' - Intentional acts excluded"
+        ]
+      },
+      "legalStatutory": {
+        "statuteOfLimitations": "Two years after the date of loss or damage per SECTION II - CONDITIONS, Suit Against Us. Claim on 3/16/2025 means suit deadline is 3/16/2027.",
+        "appraisalClause": "SECTION I – CONDITIONS, 4. Appraisal. If you and we fail to agree on the amount of loss, either party can demand that the amount of the loss be set by appraisal. Only you or we may demand appraisal. A demand for appraisal must be in writing. You must comply with SECTION I – CONDITIONS, Your Duties After Loss before making a demand for appraisal. a. Each party will select a competent, disinterested appraiser and notify the other party of the appraiser's identity within 20 days of receipt of the written demand for appraisal. b. The appraisers will first select a competent and disinterested umpire. If the appraisers are unable to agree upon an umpire within 15 days: (1) you or we may make a written application for the appointment of an umpire, to the judge of the circuit court of the county or city in which the damaged property was located at the time of loss; (2) the party requesting the selection described in item b.(1) must first provide a copy of the application: (a) to us or our agent, if the application is filed by you; or (b) to you, if the application is filed by us; and (3) upon showing, by affidavit or otherwise, the failure or neglect of the appraisers to agree upon and select an umpire within the time specified in the policy, the judge shall upon 21 days' notice to all parties appoint a competent and disinterested person to serve as umpire in determining the amount of loss or damage sustained. c. The appraisers will then attempt to set the amount of the loss of each item in dispute as specified by each party, and jointly submit to each party a written report of agreement signed by them. In all instances the written report of agreement will be itemized and state separately the actual cash value and loss to each item in dispute. The written report of agreement will set the amount of the loss of each item in dispute and will be binding upon you and us. d. If the two appraisers fail to agree upon the amount of the loss, they will submit their differences to the umpire. A written report of agreement, as required in item c., signed by any two (appraisers or appraiser and umpire) will set the amount of the loss of each item in dispute and will be binding upon you and us. In all instances the written report of agreement will be itemized and state separately the actual cash value and loss to each item in dispute. e. Each party will be responsible for the compensation of their selected appraiser. Reasonable expenses of the appraisal and the reasonable compensation of the umpire will be paid equally by you and us. If the written demand is made by us, then we will reimburse you for the reasonable cost of your appraiser and your portion of the cost of the umpire.",
+        "suitAgainstUs": "SECTION II – CONDITIONS, 6. Suit Against Us. No action will be brought against us unless there has been compliance with the policy provisions. No one will have the right to join us as a party to an action against an insured. Further, no action with respect to Coverage L will be brought against us until the obligation of the insured has been determined by final judgment on the merits, satisfied or unsatisfied, after an actual trial or by an agreement signed by us; but we will not be liable for damages that are not payable under the terms of this policy or that are in excess of the applicable Limit of Liability. --- SECTION I – CONDITIONS, 6. Suit Against Us. No action will be brought against us unless there has been full compliance with all of the policy provisions. Any action by any party must be started within two years after the date of loss or damage.",
+        "euoRequirements": "SECTION I – CONDITIONS, 2. Your Duties After Loss, item d.(3): 'give statements and submit to examinations under oath' as often as we reasonably require."
+      },
+      "flags": [
+        {
+          "variant": "green",
+          "content": "Policy Active on Date of Loss (3/16/2025) - Policy period APR 23 2024 to APR 23 2025. Loss occurred within policy period. Coverage confirmed."
+        },
+        {
+          "variant": "green",
+          "content": "Hail is a Covered Peril - SECTION I – LOSSES INSURED, COVERAGE A – DWELLING: 'We will pay for accidental direct physical loss to the property described in Coverage A, unless the loss is excluded.' COVERAGE B, Item 2: 'Windstorm or hail' is a named peril. Roof and property damage from hail on 3/16/2025 covered subject to deductible."
+        },
+        {
+          "variant": "blue",
+          "content": "Replacement Cost Settlement - Loss Settlement Provision A1 (Similar Construction) applies. Insured entitled to full replacement cost without depreciation once repairs completed, subject to Coverage A limit + Option ID extended limit."
+        },
+        {
+          "variant": "blue",
+          "content": "Appraisal Available - If State Farm and insured cannot agree on amount of loss, either party may invoke binding appraisal per SECTION I – CONDITIONS, 4. This can resolve valuation disputes without litigation."
+        },
+        {
+          "variant": "yellow",
+          "content": "16-Year-Old Roof - Roof installed 2009, now 16 years old as of loss date. Composition shingle roofs typically have 20-25 year lifespan. Age may trigger depreciation arguments or require full replacement vs. repair analysis. Policy provides RCV but State Farm may scrutinize whether damage is storm-related vs. wear and tear."
+        },
+        {
+          "variant": "yellow",
+          "content": "Deductible $1,226 (1/2% of Coverage A) - Named 'All Losses 1/2%' deductible applies. Ensure all estimates exceed deductible; small partial losses may not meet threshold."
+        },
+        {
+          "variant": "yellow",
+          "content": "Option ID Extended Replacement Limit $49,060 - If actual replacement cost exceeds Coverage A ($245,300), this option provides up to additional $49,060. Monitor final repair costs against this cap."
+        }
+      ],
+      "missing": [
+        "Square footage of dwelling",
+        "County location (city/zip known: Front Royal, VA 22630)",
+        "ISO Protection Class",
+        "Secondary water resistance status",
+        "Opening protection designation",
+        "Specific hail size or wind speed details from loss event 3/16/2025",
+        "Prior claims history (policy references 'Claim Record Discount' suggesting favorable history but no specifics provided)"
+      ],
+      "agenticNotes": [
+        {
+          "title": "Policy Type: HO-3 Equivalent (State Farm HW-2146.1)",
+          "content": "This is a State Farm proprietary Homeowners Policy form HW-2146.1 (Virginia edition). It functions as an HO-3 equivalent: Coverage A (Dwelling) is open peril ('We will pay for accidental direct physical loss to the property described in Coverage A, unless the loss is excluded'), while Coverage B (Personal Property) is named peril (17 listed perils including windstorm/hail, item 2). This is FAVORABLE: dwelling covered for all risks not specifically excluded, including hail. Personal property also covered for hail under named peril 'Windstorm or hail.'"
+        },
+        {
+          "title": "Roof Age and Claim Strategy",
+          "content": "Roof is 16 years old (installed 2009). Composition shingle roofs in Virginia climate typically last 20-25 years. At 16 years, the roof is in the depreciation 'danger zone' where carriers may argue pre-existing wear contributed to damage. However: (1) Policy provides Replacement Cost Settlement (A1 - Similar Construction), meaning NO depreciation deduction once repairs complete; (2) State Farm may still argue damage is cosmetic or pre-existing to limit scope. STRATEGY: Obtain detailed roof inspection report documenting storm damage distinct from wear. Photograph all hail strikes, damaged shingles, granule loss attributable to impact, and any exposed substrate. If State Farm argues cosmetic damage or wear, push back with expert opinion that hail impact compromised integrity and useful life. Replacement Cost provision is strong leverage."
+        },
+        {
+          "title": "Hail Loss Covered - No Exclusions Apply",
+          "content": "Hail loss on 3/16/2025 is covered under both Coverage A (open peril) and Coverage B (named peril 'Windstorm or hail'). Key policy language: SECTION I – LOSSES INSURED, COVERAGE B, item 2: 'Windstorm or hail. This peril does not include loss to property contained in a structure caused by rain, snow, sleet, sand, or dust. This limitation does not apply when the direct force of wind or hail damages the structure causing an opening in a roof or wall and the rain, snow, sleet, sand, or dust enters through this opening.' If interior damage occurred due to hail-created openings, it is covered. No problematic exclusions (vacant dwelling, ordinance/law, earth movement, water/flood) apply to a straightforward hail event."
+        },
+        {
+          "title": "Deductible and Payment Timeline",
+          "content": "AOP Deductible: $1,226 (1/2% of Coverage A per Declarations page 3). This applies to the hail loss. Per DEDUCTIBLE section: 'we will pay, subject to specified policy limits, only that part of the amount of the loss that exceeds the deductible amount shown in the Declarations. Deductibles will be applied per occurrence.' Payment: SECTION I – CONDITIONS, 8. Loss Payment: 'We will adjust all losses with you. We will pay you unless some other person is named in the policy. Loss will be payable 30 days after we receive your proof of loss and: a. reach agreement with you; b. there is an entry of a final judgment; or c. there is a filing of an appraisal award with us.' Mortgagee clause: Flagstar Bank is named; payment will be joint to insured and mortgagee per SECTION I – CONDITIONS, 10. Mortgagee Clause."
+        },
+        {
+          "title": "Replacement Cost Settlement Mechanics",
+          "content": "Loss Settlement Provision A1 (Replacement Cost – Similar Construction) per Declarations page 3. Key terms from SECTION I – LOSS SETTLEMENT, COVERAGE A, item 1: (a) 'until actual repair or replacement is completed, we will pay only the actual cash value at the time of loss of the damaged part of the property, up to the applicable limit of liability shown in the Declarations, not to exceed the cost to repair or replace the damaged part of the property. This does not apply when the full cost of repair or replacement is $2,500 or less' — if claim is under $2,500, full RCV paid upfront; (b) 'when the repair or replacement is actually completed, we will pay the covered additional amount you actually and necessarily spend to repair or replace the damaged part of the property, or an amount up to the applicable limit of liability shown in the Declarations, whichever is less'; (c) 'you must make claim for any additional payment on a replacement cost basis within six months of either: (1) the last date you received an actual cash value payment; or (2) the date of entry of a final order of a court of competent jurisdiction asserting your right to replacement cost settlement; whichever is later.' TAKEAWAY: If loss exceeds $2,500, State Farm will initially pay ACV (depreciated amount). Insured must complete repairs and submit invoices within 6 months of ACV payment to recover full RCV. Failure to complete repairs = loss of recoverable depreciation."
+        },
+        {
+          "title": "Ordinance or Law Coverage (Option OL)",
+          "content": "Option OL – Building Ordinance or Law is active at 10% of Coverage A = $24,530 (per Declarations page 4). This endorsement is CRITICAL if code upgrades are required post-loss. Coverage includes: (1) increased cost to repair/rebuild damaged portions due to code enforcement; (2) cost to demolish undamaged portions if required by code; (3) cost to upgrade undamaged portions (e.g., electrical, plumbing) if code requires changes triggered by the loss. Example: If locality requires full roof replacement when >25% is damaged, or if building code now mandates upgraded decking/underlayment, Option OL covers the increased cost up to $24,530. Without this, insured would pay out-of-pocket for code upgrades. Limitation per endorsement: 'We will not pay for more than a building or other structure of the same height, floor area, and style on the same or similar premises.' No increase in size/style."
+        },
+        {
+          "title": "Water Backup Coverage (HO-2735) - Not Relevant to Hail Claim",
+          "content": "Endorsement HO-2735 (Back-Up of Sewer or Drain) provides coverage for water/sewage backup from sewers, drains, sump pumps up to 5% of Coverage A ($12,265). This is an EXCEPTION to the standard water exclusion (SECTION I – LOSSES NOT INSURED, 2.c.(7)). However, this endorsement is NOT applicable to the current hail claim. It would apply if, for example, a storm caused sewer backup into the dwelling. Note: Flood is still excluded; HO-2735 clarifies 'Other Insurance. If a loss covered by this endorsement is also covered by flood insurance, we will pay only for the amount of covered loss in excess of the amount due from that insurance.' No flood policy indicated in this file."
+        },
+        {
+          "title": "Appraisal Clause - Dispute Resolution Tool",
+          "content": "Appraisal is available per SECTION I – CONDITIONS, 4. Either party may invoke. Process: (1) Each party selects a competent, disinterested appraiser within 20 days of written demand; (2) Appraisers select an umpire within 15 days, or party may petition circuit court for appointment; (3) Appraisers set amount of loss for each item in dispute; if they disagree, umpire decides; (4) Agreement signed by any two (appraisers or appraiser + umpire) is binding. Each party pays own appraiser; umpire cost split 50/50 (but if State Farm demands appraisal, they reimburse insured's appraiser + insured's umpire share). Appraisal resolves AMOUNT of loss, not coverage. If State Farm agrees hail damage occurred but disputes repair cost, appraisal is the path. Strategy: If State Farm lowballs estimate, consider appraisal before litigation. It is faster and binding. Note: 'You must comply with SECTION I – CONDITIONS, Your Duties After Loss before making a demand for appraisal' — ensure EUO, sworn proof of loss, and cooperation requirements met first."
+        },
+        {
+          "title": "Suit Against Us - 2-Year Statute of Limitations",
+          "content": "Per SECTION I – CONDITIONS, 6. Suit Against Us: 'Any action by any party must be started within two years after the date of loss or damage.' Loss date 3/16/2025 → suit deadline 3/16/2027. This is a CONTRACTUAL limitation, potentially shorter than Virginia's statutory SOL. If claim is denied or underpaid and negotiations fail, file suit before 3/16/2027 or claim is barred. Also: 'No action will be brought against us unless there has been full compliance with all of the policy provisions' — insured must complete all duties after loss (notice, proof of loss, EUO if requested, cooperation) before filing suit. State Farm may use non-compliance as defense."
+        },
+        {
+          "title": "Coverage Gaps and Exclusions - Not Implicated by Hail Claim",
+          "content": "Standard exclusions that do NOT apply to this hail claim: (1) Flood/surface water (SECTION I – LOSSES NOT INSURED, 2.c.) — not relevant unless hail caused flooding; (2) Earth movement (2.b.) — no earthquake/sinkhole; (3) Ordinance or law (2.a.) — Option OL endorsement provides coverage; (4) Vacant dwelling exclusion (1.e.) — no indication property was vacant >30 days; (5) Neglect (4.a.) — insured must use reasonable means to protect property post-loss (e.g., tarp damaged roof). Potential trap: 'SECTION I – LOSSES NOT INSURED, 1.g.: wear, tear, marring, scratching, deterioration, inherent vice, latent defect, or mechanical breakdown' — State Farm may argue roof damage is wear/tear, not storm damage. Counter: 'However, we will pay for any resulting loss from items a. through l. unless the resulting loss is itself a Loss Not Insured.' If hail caused resulting damage to interior or accelerated deterioration, covered. Focus on documenting storm causation."
+        }
+      ],
+      "reviewMeta": {
+        "reviewer": "CCS Policy Pro",
+        "sourcePages": 48,
+        "generatedDate": "2025-01-15"
+      },
+      "handoff": {
+        "to": "Scope PRO",
+        "content": "Insured: Nicholas & Mary Jaroma, 1117 Ashby St, Front Royal, VA 22630-6444. Carrier: State Farm Fire and Casualty Company. Policy: 46-C5-E450-2, active APR 23 2024 to APR 23 2025. Claim #4693Q539R, Date of Loss: 3/16/2025 - Hail. Policy Type: HO-3 equivalent (HW-2146.1 Virginia Homeowners), Coverage A $245,300, Coverage B $183,975, Coverage C $73,590, Liability $300,000. Deductible: $1,226 (1/2% AOP). Loss Settlement: Replacement Cost - Similar Construction (A1). Key Endorsements: Option OL (Ordinance/Law 10% = $24,530), Option ID (Extended Replacement $49,060), HO-2735 (Sewer Backup 5% = $12,265 - not applicable to hail). Roof: 2009 Composition Shingle, 16 years old - FLAG: age may trigger depreciation scrutiny but RCV provision protects insured post-repair. Mortgagee: Flagstar Bank (loan #0441066842) - joint payee. Coverage confirmed for hail damage to dwelling and personal property. Appraisal available if dispute. Suit deadline: 3/16/2027 (2 years from DOL). Occupancy: Owner-occupied, no vacancy issues. Agent: Powers Insurance Agency (540) 635-2825. Premium $702 annual, escrow. GREEN FLAGS: Policy active on DOL, hail covered, RCV settlement, appraisal clause, ordinance/law coverage. YELLOW FLAGS: 16-year-old roof (document storm vs. wear), $1,226 deductible, 6-month RCV recovery deadline post-ACV payment. Strategy: Document hail impact, obtain independent inspection, push full replacement cost, invoke appraisal if State Farm lowballs."
+      },
+      "_meta": {
+        "model": "claude-sonnet-4-5-20250929",
+        "inputTokens": 109331,
+        "outputTokens": 6077,
+        "processedAt": "2026-03-06T18:20:07.105Z"
+      },
+      "uploadedFiles": [
+        {
+          "originalName": "VC-1-Declarations_1 (1).pdf",
+          "savedAs": "1772821057417-VC-1-Declarations_1__1_.pdf",
+          "size": 1444471,
+          "uploadedAt": "2026-03-06T18:17:37.426Z"
+        }
+      ]
+    },
+    "scope": {
+      "uploadedFiles": [
+        {
+          "originalName": "VC-1-Declarations_1 (1).pdf",
+          "savedAs": "1772822123350-VC-1-Declarations_1__1_.pdf",
+          "size": 1444471,
+          "uploadedAt": "2026-03-06T18:35:23.357Z"
+        }
+      ],
+      "status": "active"
+    }
+  }
+}
