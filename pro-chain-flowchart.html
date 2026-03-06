@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCS PRO Chain — Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f1117;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 64px;
+  }
+
+  .header { text-align: center; margin-bottom: 48px; }
+  .header h1 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: #4a5568; margin-bottom: 8px;
+  }
+  .header h2 { font-size: 22px; font-weight: 700; color: #e2e8f0; letter-spacing: -0.02em; }
+  .header h2 span { color: #60a5fa; }
+
+  /* ── Main layout: left spine + right panel ── */
+  .page-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    max-width: 1100px;
+    justify-content: center;
+  }
+
+  /* Left spine — vertical flow */
+  .flow {
+    display: flex; flex-direction: column; align-items: center;
+    width: 320px; flex-shrink: 0; gap: 0;
+  }
+
+  /* Nodes */
+  .node {
+    width: 100%; max-width: 300px; border-radius: 12px;
+    padding: 13px 22px; text-align: center; font-size: 13.5px;
+    font-weight: 600; letter-spacing: -0.01em; position: relative; z-index: 2;
+    transition: transform 0.15s ease, box-shadow 0.15s ease; cursor: default;
+  }
+  .node:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .node .sub { font-size: 10.5px; font-weight: 500; opacity: 0.75; margin-top: 3px; letter-spacing: 0.02em; }
+
+  .n-green    { background: #bbf7d0; color: #14532d; border: 1.5px solid #86efac; }
+  .n-blue     { background: #bfdbfe; color: #1e3a5f; border: 1.5px solid #93c5fd; }
+  .n-gold     { background: #fef08a; color: #713f12; border: 1.5px solid #fde047; }
+  .n-purple   { background: #ddd6fe; color: #3b0764; border: 1.5px solid #c4b5fd; }
+  .n-red      { background: #fecaca; color: #7f1d1d; border: 1.5px solid #fca5a5; }
+  .n-teal     { background: #a5f3fc; color: #164e63; border: 1.5px solid #67e8f9; }
+  .n-orange   { background: #fed7aa; color: #7c2d12; border: 1.5px solid #fdba74; }
+  .n-lavender { background: #e9d5ff; color: #4c1d95; border: 1.5px solid #d8b4fe; }
+  .n-statecop { background: #bfdbfe; color: #1e3a5f; border: 2px solid #3b82f6; }
+
+  /* Vertical arrow */
+  .arrow { display: flex; flex-direction: column; align-items: center; height: 32px; flex-shrink: 0; z-index: 1; }
+  .arrow-line { width: 2px; flex: 1; background: #374151; }
+  .arrow-head { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #374151; }
+
+  /* Branch */
+  .branch-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .branch-row { display: flex; justify-content: center; align-items: flex-start; gap: 8px; width: 100%; }
+  .branch-col { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 0; }
+  .branch-col .node { max-width: 100%; width: 100%; font-size: 12px; padding: 11px 10px; }
+
+  /* State PRO — node + badge */
+  .state-node-wrap { display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .orch-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #1c1a2e; border: 1px solid #4c1d95; border-radius: 20px;
+    padding: 3px 11px; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #a78bfa; margin-top: 6px;
+  }
+
+  /* Right panel connector */
+  .right-panel-area {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 484px;
+    flex-shrink: 0;
+  }
+
+  /* Horizontal arm from State PRO to sub-agent panel */
+  .h-arm {
+    display: flex;
+    align-items: center;
+    width: 120px;
+    flex-shrink: 0;
+    margin-top: 22px;
+  }
+  .h-line { flex: 1; height: 2px; background: #4b5563; }
+  .h-tip {
+    width: 0; height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 9px solid #4b5563;
+    flex-shrink: 0;
+  }
+
+  /* Sub-agent panel */
+  .sub-panel {
+    margin-top: 0;
+    padding: 14px 16px;
+    background: #0d1520;
+    border: 1px solid #1e3a5f;
+    border-radius: 14px;
+    width: 340px;
+    flex-shrink: 0;
+  }
+  .sub-panel-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #374151; margin-bottom: 10px;
+    text-align: center;
+  }
+  .sub-panel-header span { color: #4b6080; }
+
+  /* State chips grid */
+  .states-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .state-chip {
+    background: #111827;
+    border: 1px solid #1e3a5f;
+    border-radius: 6px;
+    padding: 5px 4px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #93c5fd;
+    text-align: center;
+    transition: background 0.12s;
+    cursor: default;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .state-chip:hover { background: #1a2a3f; }
+
+  /* Territory chips */
+  .territories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    border-top: 1px solid #1e2d3d;
+    padding-top: 8px;
+  }
+  .territory-chip {
+    background: #1a1030;
+    border: 1px solid #3b1f6e;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #c4b5fd;
+    text-align: center;
+    transition: background 0.12s;
+    cursor: default;
+  }
+  .territory-chip:hover { background: #231545; }
+  .territory-chip .t-sub { font-size: 8.5px; color: #5b3f9e; font-weight: 500; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Coastal Claims Services</h1>
+  <h2>CCS <span>PRO Chain</span> — Claim Workflow</h2>
+</div>
+
+<div class="page-layout">
+
+  <!-- ── Left spine ── -->
+  <div class="flow">
+
+    <div class="node n-green">
+      Claims AI
+      <div class="sub">Onboarding · File Contact · File Depart · Photos</div>
+    </div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">Policy PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">Scope PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-gold">Estimating</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-purple">Claims Strategy PRO</div>
+
+    <!-- Branch -->
+    <div class="branch-wrapper">
+      <svg width="300" height="36" viewBox="0 0 300 36" style="display:block;">
+        <line x1="150" y1="0" x2="40"  y2="36" stroke="#374151" stroke-width="1.5"/>
+        <line x1="150" y1="0" x2="150" y2="36" stroke="#60a5fa" stroke-width="1.5"/>
+        <line x1="150" y1="0" x2="260" y2="36" stroke="#374151" stroke-width="1.5"/>
+        <polygon points="36,30 44,30 40,36" fill="#374151"/>
+        <polygon points="146,30 154,30 150,36" fill="#60a5fa"/>
+        <polygon points="256,30 264,30 260,36" fill="#374151"/>
+      </svg>
+      <div class="branch-row">
+        <div class="branch-col"><div class="node n-red">Denial<br>PRO</div></div>
+        <div class="branch-col"><div class="node n-blue">NEW Claim PRO</div></div>
+        <div class="branch-col"><div class="node n-orange">Loss Below PRO</div></div>
+      </div>
+      <svg width="300" height="36" viewBox="0 0 300 36" style="display:block;">
+        <line x1="40"  y1="0" x2="150" y2="36" stroke="#374151" stroke-width="1.5"/>
+        <line x1="150" y1="0" x2="150" y2="36" stroke="#60a5fa" stroke-width="1.5"/>
+        <line x1="260" y1="0" x2="150" y2="36" stroke="#374151" stroke-width="1.5"/>
+        <polygon points="146,30 154,30 150,36" fill="#374151"/>
+      </svg>
+    </div>
+
+    <!-- State PRO -->
+    <div class="state-node-wrap">
+      <div class="node n-statecop" style="max-width:300px;width:100%;">
+        State PRO
+        <div class="sub">Deadlines · SOL · Appraisal · Matching · DOI</div>
+      </div>
+      <div class="orch-badge">🚦 Orchestrator</div>
+    </div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-teal">Undisputed Funds PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">SPOL PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">15 Day PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-orange">Formal Demand PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-green">30 Day PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">45 Day PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-lavender">Peer Review</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">60 Day PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-blue">75 Day PRO</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-lavender">Peer Review</div>
+    <div class="arrow"><div class="arrow-line"></div><div class="arrow-head"></div></div>
+
+    <div class="node n-green">90 Day PRO</div>
+
+  </div><!-- /flow -->
+
+  <!-- ── Right panel: horizontal arm + sub-agents ── -->
+  <div class="right-panel-area">
+    <div class="h-arm">
+      <div class="h-line"></div>
+      <div class="h-tip"></div>
+    </div>
+
+    <div class="sub-panel">
+      <div class="sub-panel-header">State Sub-Agents <span>— fires on demand</span></div>
+
+      <div class="states-grid">
+        <div class="state-chip">Alabama</div>
+        <div class="state-chip">Alaska</div>
+        <div class="state-chip">Arizona</div>
+        <div class="state-chip">Arkansas</div>
+        <div class="state-chip">California</div>
+        <div class="state-chip">Colorado</div>
+        <div class="state-chip">Connecticut</div>
+        <div class="state-chip">Delaware</div>
+        <div class="state-chip">Florida</div>
+        <div class="state-chip">Georgia</div>
+        <div class="state-chip">Hawaii</div>
+        <div class="state-chip">Idaho</div>
+        <div class="state-chip">Illinois</div>
+        <div class="state-chip">Indiana</div>
+        <div class="state-chip">Iowa</div>
+        <div class="state-chip">Kansas</div>
+        <div class="state-chip">Kentucky</div>
+        <div class="state-chip">Louisiana</div>
+        <div class="state-chip">Maine</div>
+        <div class="state-chip">Maryland</div>
+        <div class="state-chip">Massachusetts</div>
+        <div class="state-chip">Michigan</div>
+        <div class="state-chip">Minnesota</div>
+        <div class="state-chip">Mississippi</div>
+        <div class="state-chip">Missouri</div>
+        <div class="state-chip">Montana</div>
+        <div class="state-chip">Nebraska</div>
+        <div class="state-chip">Nevada</div>
+        <div class="state-chip">New Hampshire</div>
+        <div class="state-chip">New Jersey</div>
+        <div class="state-chip">New Mexico</div>
+        <div class="state-chip">New York</div>
+        <div class="state-chip">North Carolina</div>
+        <div class="state-chip">North Dakota</div>
+        <div class="state-chip">Ohio</div>
+        <div class="state-chip">Oklahoma</div>
+        <div class="state-chip">Oregon</div>
+        <div class="state-chip">Pennsylvania</div>
+        <div class="state-chip">Rhode Island</div>
+        <div class="state-chip">South Carolina</div>
+        <div class="state-chip">South Dakota</div>
+        <div class="state-chip">Tennessee</div>
+        <div class="state-chip">Texas</div>
+        <div class="state-chip">Utah</div>
+        <div class="state-chip">Vermont</div>
+        <div class="state-chip">Virginia</div>
+        <div class="state-chip">Washington</div>
+        <div class="state-chip">West Virginia</div>
+        <div class="state-chip">Wisconsin</div>
+        <div class="state-chip">Wyoming</div>
+      </div>
+
+      <div class="territories-grid">
+        <div class="territory-chip">
+          U.S. Virgin Islands
+          <div class="t-sub">USVI · Territorial rules</div>
+        </div>
+        <div class="territory-chip">
+          Puerto Rico
+          <div class="t-sub">PR · Territorial rules</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-layout -->
+</body>
+</html>
