@@ -36,13 +36,27 @@ Support tools: State PRO = DONE, RFI/ROR Pro = DONE
 
 ---
 
-## NEXT SESSION PRIORITIES
+## NEXT SESSION PRIORITIES — FROM FRANK (DO THESE FIRST)
 
-1. **Review the Ammerman Policy PRO output** — Frank has the report loaded in the browser. Check data quality, compare to what a human PA would extract. Fix any rendering issues.
-2. **Polish the loading overlay** — staged messages instead of raw seconds (Reading document → Extracting data → Building report). Cosmetic only.
-3. **Wire Scope PRO** — same pattern as Policy PRO but with the Scope PRO prompt. Upload photos/inspection notes → Claude → structured JSON.
-4. **Write remaining skill specs** — 15 Day, Formal Demand, 30 Day, 45/60/75/90 Day folders are empty. Design work, no BINGO needed.
-5. **Backwards compatibility** — the Armstrong claim uses old field names (coverage.A vs coverage.coverageA). Renderer handles both, but Armstrong data could be updated to match the new schema.
+### 1. EagleView supplemental upload is broken
+Frank uploaded the policy, got the report, then realized he had the EagleView roof report too. He went to add it but the system didn't know what to do — it just said "uploading" and nothing happened. **The system has no logic for supplemental uploads to an already-completed PRO step.** Need to handle: "Policy PRO is already complete, but user is adding an EagleView — re-run Policy PRO with the new document added to the original."
+
+### 2. Property underwriting is BAD — needs web search
+The skill spec says to do web searches for county appraiser data (year built, sq footage, roof year, sales history, permits). But the Claude API call has NO web search tool. Claude is guessing at fields like occupancy ("owner occupied" when it probably isn't). The underwriting section came back weak — Frank says he could have found more info himself. **Need to either: (a) add web search tool use to the API call, or (b) do a separate property research step before/after the extraction.**
+
+### 3. Report organization needs rework
+Frank isn't happy with the section order and layout. Needs rearranging — specifics TBD when reviewing the actual output next session. The data is there but the presentation needs polish.
+
+### 4. Overall: "Not a great report but it's working"
+The plumbing works. The API call succeeds. Data comes back. But the output quality needs significant refinement before this is production-ready. Focus on making Policy PRO excellent before wiring up more PROs.
+
+---
+
+## LOWER PRIORITY (after above is fixed)
+- Polish loading overlay (staged messages instead of raw seconds)
+- Wire Scope PRO upload → Claude
+- Write remaining skill specs (15 Day, Formal Demand, 30 Day, 45/60/75/90 Day)
+- Update Armstrong data to match new schema field names
 
 ---
 
