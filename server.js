@@ -1,13 +1,38 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const PORT = 3000;
 const CLAIMS_DIR = path.join(__dirname, 'claims');
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
-// Static files (styles.css, chain.js)
+// Ensure directories exist
+if (!fs.existsSync(CLAIMS_DIR)) fs.mkdirSync(CLAIMS_DIR, { recursive: true });
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// File upload config
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      const claimDir = path.join(UPLOADS_DIR, req.params.id);
+      if (!fs.existsSync(claimDir)) fs.mkdirSync(claimDir, { recursive: true });
+      cb(null, claimDir);
+    },
+    filename: (req, file, cb) => {
+      const timestamp = Date.now();
+      const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
+      cb(null, `${timestamp}-${safeName}`);
+    }
+  }),
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB max
+});
 
 // ─── Utility ───────────────────────────────────────────────
 
@@ -57,6 +82,119 @@ const CONDITIONAL_TOOLS = [
   { id: 'sec-rfi', badge: 'RFI PRO', bc: 'badge-rfi', theme: 'theme-rfi', title: 'Request for Information', sub: 'Carrier RFI response \u00b7 ROR detection \u00b7 Insured compliance email' },
   { id: 'sec-state-cond', badge: 'State PRO', bc: 'badge-state', theme: 'theme-state', title: 'State Law Lookup', sub: 'Called by any PRO before correspondence \u00b7 50-state reference' },
 ];
+
+// ─── Current Step Detection ──────────────────────────────────
+
+// Walk the chain and find the first PRO that isn't complete
+function getCurrentStep(pros) {
+  // Linear chain (skip 'branch' marker)
+  for (const item of PRO_CHAIN) {
+    if (item === 'branch') {
+      // Check if ANY branch path is needed — look at strategy routing
+      const strategyData = pros.strategy;
+      if (!strategyData || strategyData.status !== 'complete') continue;
+      // Check branch PROs
+      for (const bp of BRANCH_PROS) {
+        const d = pros[bp.key];
+        if (d && d.status !== 'pending' && d.status !== 'complete') return bp;
+        if (!d || d.status === 'pending') {
+          // Only return this branch if strategy routed here
+          const routing = (strategyData.routing || '').toLowerCase();
+          if (bp.key === 'denial' && routing.includes('denial')) return bp;
+          if (bp.key === 'newClaim' && (routing.includes('new claim') || routing.includes('new_claim'))) return bp;
+          if (bp.key === 'lossBelow' && (routing.includes('loss below') || routing.includes('loss_below') || routing.includes('underpay'))) return bp;
+        }
+      }
+      continue;
+    }
+    const d = pros[item.key];
+    if (!d || d.status === 'pending') return item;
+    if (d.status !== 'complete') return item;
+  }
+  return null; // all done
+}
+
+// What each PRO step needs uploaded to proceed
+const STEP_UPLOAD_PROMPTS = {
+  policy: {
+    title: 'Policy PRO',
+    instruction: 'Upload the insurance policy to begin your claim workflow.',
+    detail: 'Declarations page preferred. Full policy accepted. Scanned PDFs are fine — the system handles image-based documents.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  scope: {
+    title: 'Scope PRO',
+    instruction: 'Upload property photos and inspection notes for the scope of loss.',
+    detail: 'Include all damage photos, measurements, and any EagleView or Hover reports if available.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg,.zip',
+  },
+  estimating: {
+    title: 'Estimating',
+    instruction: 'Upload the Xactimate estimate when ready.',
+    detail: 'This is a human step — upload the completed estimate to advance the chain.',
+    accept: '.pdf,.docx,.esx,.xlsx',
+  },
+  strategy: {
+    title: 'Strategy PRO',
+    instruction: 'Upload the carrier\'s response letter to run Claims Strategy.',
+    detail: 'This can be a denial letter, partial payment notice, or any carrier correspondence. Strategy PRO will determine the claim track.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  denial: {
+    title: 'Denial PRO',
+    instruction: 'Upload the carrier denial letter.',
+    detail: 'Strategy PRO has routed this claim to the denial track. Upload the denial letter to generate the response.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  newClaim: {
+    title: 'NEW Claim PRO',
+    instruction: 'Ready to generate early positioning documents.',
+    detail: 'Strategy PRO has routed this claim to the new claim track. The system will generate forward pressure documents.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  lossBelow: {
+    title: 'Loss Below PRO',
+    instruction: 'Upload the carrier\'s underpayment notice or partial scope.',
+    detail: 'Strategy PRO has routed this claim to the underpayment track. Upload carrier documents showing their low-ball position.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  state: {
+    title: 'State PRO',
+    instruction: 'State compliance check will run automatically.',
+    detail: 'State PRO fires before correspondence is generated. No upload needed — it pulls from claim data.',
+    accept: '',
+  },
+  undisputed: {
+    title: 'Undisputed Funds PRO',
+    instruction: 'Ready to generate undisputed funds demand.',
+    detail: 'Requires the strategic analysis report from the previous step, the estimate, and the policy coverage summary. Upload any missing documents.',
+    accept: '.pdf,.docx,.doc',
+  },
+  spol: {
+    title: 'SPOL PRO',
+    instruction: 'Upload the blank Sworn Proof of Loss form.',
+    detail: 'The system will pre-fill the SPOL from your claim data. Upload the carrier\'s blank SPOL form to begin.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  day15: {
+    title: '15 Day PRO',
+    instruction: 'Ready to generate 15-day demand.',
+    detail: 'The 15-day clock from date of loss is tracked. Upload any new carrier correspondence if applicable.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  formalDemand: {
+    title: 'Formal Demand PRO',
+    instruction: 'Ready to generate formal demand letter.',
+    detail: 'Upload any carrier responses received since the last step.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+  day30: {
+    title: '30 Day PRO',
+    instruction: 'Ready to generate 30-day follow-up.',
+    detail: 'Upload any carrier correspondence received since formal demand.',
+    accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+  },
+};
 
 // ─── Shared Renderers ──────────────────────────────────────
 
@@ -422,6 +560,44 @@ function renderChainPage(claim) {
     first = false;
   });
 
+  // Detect current step for upload prompt
+  const currentStep = getCurrentStep(pros);
+  const claimId = m.claimNumber ? m.claimNumber.replace(/[^a-zA-Z0-9_-]/g, '_') : 'unknown';
+  let uploadPromptHTML = '';
+  if (currentStep) {
+    const prompt = STEP_UPLOAD_PROMPTS[currentStep.key] || {
+      title: currentStep.badge,
+      instruction: 'Upload documents to proceed.',
+      detail: '',
+      accept: '.pdf,.docx,.doc,.png,.jpg,.jpeg',
+    };
+    uploadPromptHTML = `
+<div class="upload-prompt">
+  <div class="upload-prompt-step">NEXT STEP</div>
+  <div class="upload-prompt-title">${esc(prompt.title)}</div>
+  <div class="upload-prompt-instruction">${esc(prompt.instruction)}</div>
+  <div class="upload-prompt-detail">${esc(prompt.detail)}</div>
+  ${prompt.accept ? `
+  <form class="upload-form" action="/claim/${esc(claimId)}/upload/${esc(currentStep.key)}" method="POST" enctype="multipart/form-data">
+    <label class="upload-dropzone" id="dropzone">
+      <input type="file" name="documents" multiple accept="${prompt.accept}" onchange="updateFileList(this)">
+      <div class="dropzone-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div class="dropzone-text">Drop files here or click to browse</div>
+      <div class="dropzone-accept">${esc(prompt.accept.replace(/\./g, '').toUpperCase().replace(/,/g, ', '))}</div>
+    </label>
+    <div class="file-list" id="fileList"></div>
+    <button type="submit" class="btn-upload" id="uploadBtn" style="display:none;">Upload &amp; Run ${esc(prompt.title)}</button>
+  </form>` : `
+  <div class="upload-auto-note">This step runs automatically — no upload needed.</div>`}
+</div>`;
+  }
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -454,6 +630,8 @@ function renderChainPage(claim) {
   <a href="/" class="btn" style="text-decoration:none;">&larr; Dashboard</a>
   <span class="toolbar-label">${done} / ${total} steps complete</span>
 </div>
+
+${uploadPromptHTML}
 
 <div class="chain">
 ${chainHTML}
@@ -530,7 +708,8 @@ function renderDashboard(claims) {
 <link rel="stylesheet" href="/styles.css">
 <style>
   .dashboard { max-width: 95vw; margin: 40px auto; padding: 0 32px; }
-  .dashboard h2 { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; }
+  .dash-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .dash-header h2 { font-size: 18px; font-weight: 600; color: var(--text-primary); margin: 0; }
   .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .dash-table th {
     text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 700;
@@ -544,6 +723,14 @@ function renderDashboard(claims) {
   .claim-count {
     font-size: 12px; color: var(--text-dim); margin-bottom: 16px;
   }
+  .btn-new {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; padding: 9px 20px;
+    border-radius: 8px; border: 1px solid #2563eb;
+    background: #1e40af; color: #fff; cursor: pointer;
+    text-decoration: none; transition: background 0.15s;
+  }
+  .btn-new:hover { background: #2563eb; }
 </style>
 </head>
 <body>
@@ -554,7 +741,10 @@ function renderDashboard(claims) {
 </div>
 
 <div class="dashboard">
-  <h2>Active Claims</h2>
+  <div class="dash-header">
+    <h2>Active Claims</h2>
+    <a href="/new" class="btn-new">+ New Claim</a>
+  </div>
   <div class="claim-count">${claims.length} claim${claims.length !== 1 ? 's' : ''} on file</div>
   <table class="dash-table">
     <thead>
@@ -583,6 +773,316 @@ app.get('/', (req, res) => {
   const claims = loadAllClaims();
   res.send(renderDashboard(claims));
 });
+
+// ─── New Claim Form ────────────────────────────────────────
+
+app.get('/new', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCS PRO Chain \u2014 New Claim</title>
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .new-claim { max-width: 560px; margin: 48px auto; padding: 0 32px; }
+  .new-claim h2 { font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+  .new-claim .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent-blue); margin-bottom: 6px;
+  }
+  .form-group input {
+    width: 100%; padding: 10px 14px; font-size: 14px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text-primary);
+    font-family: 'Inter', sans-serif; outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus { border-color: var(--accent-blue); }
+  .form-group input::placeholder { color: var(--text-dim); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-actions { display: flex; gap: 12px; margin-top: 32px; }
+  .btn-submit {
+    font-size: 14px; font-weight: 600; padding: 11px 28px;
+    border-radius: 8px; border: 1px solid #2563eb;
+    background: #1e40af; color: #fff; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: background 0.15s;
+  }
+  .btn-submit:hover { background: #2563eb; }
+  .btn-cancel {
+    font-size: 14px; font-weight: 600; padding: 11px 28px;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); cursor: pointer;
+    font-family: 'Inter', sans-serif; text-decoration: none;
+    display: inline-flex; align-items: center; transition: background 0.15s;
+  }
+  .btn-cancel:hover { background: rgba(255,255,255,0.05); }
+  .paste-section {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .paste-section label {
+    display: block; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: #6ee7b7; margin-bottom: 6px;
+  }
+  .paste-hint {
+    font-size: 12px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5;
+  }
+  .paste-box {
+    width: 100%; min-height: 120px; padding: 12px 14px; font-size: 13px;
+    background: var(--bg-card); border: 1px dashed #059669;
+    border-radius: 8px; color: var(--text-primary);
+    font-family: 'Inter', sans-serif; outline: none; resize: vertical;
+    transition: border-color 0.15s; line-height: 1.6;
+  }
+  .paste-box:focus { border-color: #6ee7b7; }
+  .paste-box::placeholder { color: var(--text-dim); font-size: 12px; }
+  .paste-result {
+    margin-top: 8px; font-size: 12px; color: #6ee7b7;
+    display: none;
+  }
+  .paste-result.show { display: block; }
+  .or-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0; font-size: 11px; color: var(--text-dim);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .or-divider::before, .or-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">COASTAL CLAIMS <span>SERVICES</span></div>
+  <div class="topbar-claim">NEW CLAIM</div>
+</div>
+
+<div class="new-claim">
+  <h2>Start New Claim</h2>
+  <div class="subtitle">Paste from ClaimWizard to auto-fill, or enter manually below.</div>
+
+  <div class="paste-section">
+    <label>Paste from ClaimWizard</label>
+    <div class="paste-hint">Copy the claim info from ClaimWizard and paste it here. Fields will auto-fill.</div>
+    <textarea class="paste-box" id="pasteBox" placeholder="Paste claim data here..."></textarea>
+    <div class="paste-result" id="pasteResult"></div>
+  </div>
+
+  <div class="or-divider">or enter manually</div>
+
+  <form action="/new" method="POST" id="claimForm">
+    <div class="form-group">
+      <label>Claim Number</label>
+      <input type="text" name="claimNumber" id="f-claimNumber" placeholder="0794736884" required>
+    </div>
+
+    <div class="form-group">
+      <label>Insured Name</label>
+      <input type="text" name="insured" id="f-insured" placeholder="Pedro & Blanca Castrejon" required>
+    </div>
+
+    <div class="form-group">
+      <label>Carrier</label>
+      <input type="text" name="carrier" id="f-carrier" placeholder="Allstate" required>
+    </div>
+
+    <div class="form-group">
+      <label>Property Address</label>
+      <input type="text" name="address" id="f-address" placeholder="4292 Rock Bend Dr, College Station, TX 77845" required>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date of Loss</label>
+        <input type="text" name="dateOfLoss" id="f-dateOfLoss" placeholder="5/24/2025 \u2014 Wind/Hail" required>
+      </div>
+      <div class="form-group">
+        <label>Policy Number</label>
+        <input type="text" name="policyNumber" id="f-policyNumber" placeholder="000838425633">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>File Status</label>
+        <input type="text" name="fileStatus" id="f-fileStatus" placeholder="CTG - Supplemental">
+      </div>
+      <div class="form-group">
+        <label>Peril</label>
+        <input type="text" name="peril" id="f-peril" placeholder="Wind/Hail">
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-submit">Create Claim</button>
+      <a href="/" class="btn-cancel">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.getElementById('pasteBox').addEventListener('input', function() {
+  const raw = this.value.trim();
+  if (!raw) return;
+
+  const lines = raw.split(/\\n/).map(l => l.trim()).filter(Boolean);
+  const text = raw;
+  let filled = 0;
+
+  // Claim # — look for "Claim #" label followed by number
+  const claimMatch = text.match(/Claim\\s*#\\s*[:\\n]?\\s*([A-Za-z0-9-]+)/i);
+  if (claimMatch) { document.getElementById('f-claimNumber').value = claimMatch[1]; filled++; }
+
+  // Policy #
+  const policyMatch = text.match(/Policy\\s*#\\s*[:\\n]?\\s*([A-Za-z0-9-]+)/i);
+  if (policyMatch) { document.getElementById('f-policyNumber').value = policyMatch[1]; filled++; }
+
+  // Carrier
+  const carrierMatch = text.match(/Carrier\\s*[:\\n]?\\s*(.+)/i);
+  if (carrierMatch) { document.getElementById('f-carrier').value = carrierMatch[1].trim(); filled++; }
+
+  // Loss Date
+  const dateMatch = text.match(/Loss\\s*Date\\s*[:\\n]?\\s*([\\d\\/\\-]+)/i);
+  if (dateMatch) {
+    let dateVal = dateMatch[1].trim();
+    // Also grab peril if on next line or nearby
+    const perilMatch = text.match(/Peril\\s*[:\\n]?\\s*(.+)/i);
+    if (perilMatch) {
+      dateVal += ' \\u2014 ' + perilMatch[1].trim();
+      document.getElementById('f-peril').value = perilMatch[1].trim();
+      filled++;
+    }
+    document.getElementById('f-dateOfLoss').value = dateVal;
+    filled++;
+  }
+
+  // Loss Address
+  const addrMatch = text.match(/Loss\\s*Address\\s*:\\s*(.+)/i);
+  if (addrMatch) { document.getElementById('f-address').value = addrMatch[1].trim(); filled++; }
+
+  // Insured — first line, usually "Name — Address" or "Name"
+  // Try first line before any label
+  const firstLine = lines[0] || '';
+  const namePart = firstLine.split(/\\s*[\\u2014—-]\\s*/)[0].trim();
+  if (namePart && !namePart.match(/^(Loss|Carrier|Policy|Claim|Peril|Severity|CTG|\\$)/i)) {
+    document.getElementById('f-insured').value = namePart;
+    filled++;
+  }
+
+  // File status — CTG lines
+  const ctgMatch = text.match(/(CTG\\s*[-\\u2014—]\\s*\\w[\\w\\s]*)/i);
+  if (ctgMatch) { document.getElementById('f-fileStatus').value = ctgMatch[1].trim(); filled++; }
+
+  // If no Loss Address found, try to get address from first line after dash
+  if (!addrMatch) {
+    const dashAddr = firstLine.match(/[\\u2014—-]\\s*(.+)/);
+    if (dashAddr) {
+      // Look for a fuller address in the text
+      const fullAddr = text.match(/([\\d]+\\s+[\\w\\s]+(?:Dr|St|Ave|Rd|Ln|Ct|Blvd|Way|Pl)[\\w\\s,]*\\d{5}(?:-\\d{4})?)/i);
+      if (fullAddr) {
+        document.getElementById('f-address').value = fullAddr[1].trim();
+        filled++;
+      }
+    }
+  }
+
+  const result = document.getElementById('pasteResult');
+  result.textContent = filled + ' field' + (filled !== 1 ? 's' : '') + ' auto-filled. Review below and hit Create Claim.';
+  result.classList.add('show');
+});
+</script>
+
+</body>
+</html>`);
+});
+
+app.post('/new', (req, res) => {
+  const { claimNumber, insured, carrier, address, dateOfLoss, policyNumber, fileStatus, peril } = req.body;
+
+  if (!claimNumber || !insured) {
+    return res.status(400).send('Claim number and insured name are required.');
+  }
+
+  // Create safe filename from claim number
+  const fileId = claimNumber.replace(/[^a-zA-Z0-9_-]/g, '_');
+  const filePath = path.join(CLAIMS_DIR, `${fileId}.json`);
+
+  // Don't overwrite existing claims
+  if (fs.existsSync(filePath)) {
+    return res.status(409).send(`Claim ${claimNumber} already exists. <a href="/claim/${fileId}">Open it</a>`);
+  }
+
+  // Build the claim JSON — everything starts at pending
+  const claimData = {
+    meta: {
+      claimNumber: claimNumber,
+      lastName: insured.split(' ').pop(),
+      generatedDate: new Date().toISOString().split('T')[0],
+    },
+    claim: {
+      insured: insured,
+      address: address || '',
+      carrier: carrier || '',
+      policyNumber: policyNumber || '',
+      claimNumber: claimNumber,
+      dateOfLoss: dateOfLoss || '',
+      peril: peril || '',
+      policyType: '',
+      fileStatus: fileStatus || 'New — Awaiting Policy Review',
+    },
+    pros: {},
+  };
+
+  fs.writeFileSync(filePath, JSON.stringify(claimData, null, 2));
+  res.redirect(`/claim/${fileId}`);
+});
+
+// ─── File Upload Route ─────────────────────────────────────
+
+app.post('/claim/:id/upload/:proKey', upload.array('documents', 10), (req, res) => {
+  const filePath = path.join(CLAIMS_DIR, `${req.params.id}.json`);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('Claim not found');
+  }
+
+  const files = req.files || [];
+  if (files.length === 0) {
+    return res.redirect(`/claim/${req.params.id}`);
+  }
+
+  // Update claim JSON to mark this step as active with uploaded files
+  try {
+    const claim = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    const proKey = req.params.proKey;
+
+    // Record the upload in the PRO step
+    if (!claim.pros[proKey]) {
+      claim.pros[proKey] = {};
+    }
+    claim.pros[proKey].status = 'active';
+    claim.pros[proKey].uploadedFiles = files.map(f => ({
+      originalName: f.originalname,
+      savedAs: f.filename,
+      size: f.size,
+      uploadedAt: new Date().toISOString(),
+    }));
+
+    fs.writeFileSync(filePath, JSON.stringify(claim, null, 2));
+  } catch (e) {
+    console.error('Error updating claim after upload:', e.message);
+  }
+
+  res.redirect(`/claim/${req.params.id}`);
+});
+
+// ─── Claim View ────────────────────────────────────────────
 
 app.get('/claim/:id', (req, res) => {
   const filePath = path.join(CLAIMS_DIR, `${req.params.id}.json`);

@@ -1,8 +1,8 @@
-# RFI PRO — Chain JSON Schema
+# RFI/ROR PRO — Chain JSON Schema
 
-**How RFI PRO data lands in the chain JSON at `pros.rfiResponses[]`.**
+**How RFI/ROR PRO data lands in the chain JSON at `pros.rfiResponses[]`.**
 **Note: This is an array — multiple RFIs can arrive during a claim lifecycle. Each RFI appends to the array.**
-**For operational logic, see `rfi-pro.md` in this directory.**
+**For operational logic, see `rfi-ror-pro.md` in this directory.**
 
 ---
 
@@ -98,7 +98,7 @@
 
 | Field | Type | Required | Notes |
 |---|---|---|---|
-| `status` | string | Yes | `"complete"` when RFI PRO finishes processing this RFI |
+| `status` | string | Yes | `"complete"` when RFI/ROR PRO finishes processing this RFI |
 | `rfiDate` | string | Yes | ISO date — date the carrier's RFI letter was sent or received |
 | `requestNumber` | number | Yes | `1`, `2`, or `3` — which request this is (1st, 2nd, 3rd) |
 | `responseDeadline` | string | Yes | ISO date — deadline stated in RFI, or calculated (RFI date + 10 business days if unstated) |
@@ -124,7 +124,7 @@
 
 ## How Downstream PROs Read This
 
-RFI PRO writes to `pros.rfiResponses[]` (array). Each RFI appends a new entry. Downstream PROs scan the array for relevant data:
+RFI/ROR PRO writes to `pros.rfiResponses[]` (array). Each RFI appends a new entry. Downstream PROs scan the array for relevant data:
 
 1. **Is this claim escalated due to unanswered RFIs?** → `isEscalated` (true on 2nd/3rd request — urgency flag)
 2. **When is the response due?** → `responseDeadline` (critical deadline)
