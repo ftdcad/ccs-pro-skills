@@ -163,13 +163,20 @@ These are NOT numbered pipeline steps. They fire on demand when triggered by spe
 | `prompts/08-spol-pro/spol-pro.md` | Conversation draft from Frank (2 revisions) | Sworn proof of loss prep. [NOT PROVIDED] pattern for missing data. 24hr delivery rule. Insured email with hot potato framing. |
 | `prompts/support/rfi-pro/rfi-pro.md` | Conversation draft from Frank | Conditional/position-independent. ROR detection rule (scan every ROR for embedded RFIs). Dual-route: ROR to Strategy Pro + RFI Pro simultaneously. Escalation flags for 2nd/3rd requests. |
 
-### State PRO Architecture (Decided Mar 4)
+### State PRO Architecture (Decided Mar 4, updated Mar 6)
+- **SHARED SERVICE — NOT just a pipeline step.** Each state sub-agent is a comprehensive knowledge base — everything about adjusting in that state. Different portal consumers query different slices:
+  - **State PRO** (PRO chain) queries the **claims handling** slice: deadlines, SOL, carrier obligations, appraisal rules, matching regs
+  - **Compliance tab** queries the **licensing/bonding** slice: adjuster licensing, business licensing, bonds, CE requirements
+  - **Future portal features** query their own slices as needed
+  - The State PRO orchestrator is scoped — it ONLY touches claims handling data, even though the full state sub-agent knows everything about that state
+  - The flowchart shows states on a side panel for this reason — they're shared infrastructure, not owned by the chain
+  - The PRO chain replaces the current Coastal AI tab (independent GPTs). The state sub-agents also power the Compliance tab.
 - **Hybrid model**: Layer 1 = hardcoded core facts for top states. Layer 2 = web search for all others, flagged "verify before acting."
 - **Top 6 states** (CCS priority): FL, TX, GA, SC, LA, IL
 - **TX is production-ready** in skill spec — full carrier obligations, PA compliance, TWIA detection, 542A fee trap, suit bar risk
 - **10 fields per state**: notice of loss, proof of loss, pre-suit notice + cure window, carrier ack deadline, carrier investigation deadline, SOL breach, SOL bad faith, appraisal rules, EUO rules, matching reg
 - **Merlin Law Group guides**: 14 PDFs extracted to data/state-reference/ — 13 state files + 1 matching chart. Some fields flagged "web search required."
-- **Portal integration**: State PRO eventually routes to portal.coastalclaims.net/compliance (798 rules, 50 states). Interface stubs in skill spec.
+- **Portal integration**: State PRO feeds into portal.coastalclaims.net/compliance (798 rules, 50 states). Interface stubs in skill spec. Same state data will serve Compliance tab, CRM functions, and any portal feature that needs state-specific rules.
 
 ### Communication Tone Rule (ALL PROs)
 Know the law, never cite it. No statute numbers or case law in correspondence sent to carriers. "It's my understanding I should hear a response in no greater than 10 days" — NOT "Per Statute 627.70131(5)(a)..." PAs are not lawyers. Carriers will use legal citations against you. Internal docs (like State PRO reports) can cite freely.

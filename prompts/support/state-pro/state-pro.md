@@ -1,9 +1,29 @@
 # STATE PRO
-## CCS Claim Chain — State Compliance & Carrier Obligations Skill
-### Version: 0.2.0
+## CCS State Sub-Agent — Shared Service Orchestrator
+### Version: 0.3.0
 ### Status: 🚧 UNDER CONSTRUCTION
 ### TX: Production-ready | All other states: Placeholder (web search fallback)
-### Portal integration: Stubbed — ties to portal.coastalclaims.net/compliance when built
+### Architecture: SHARED SERVICE — not owned by the PRO chain
+
+---
+
+## ARCHITECTURE — SHARED SERVICE MODEL
+
+State sub-agents are **the centralized knowledge base for everything about adjusting in a given state**. Each state sub-agent contains comprehensive data across multiple domains: claims handling, licensing, bonding, business compliance, and more.
+
+**Different portal consumers query different slices of the same state data:**
+
+| Consumer | What It Asks For | Data Domain |
+|----------|-----------------|-------------|
+| **State PRO** (PRO claim chain) | Carrier deadlines, SOL, appraisal rules, matching regs, pre-suit requirements | Claims Handling |
+| **Compliance tab** (portal) | Adjuster licensing, business licensing, bonds, CE requirements, DOI rules | Licensing & Compliance |
+| **Future portal features** | TBD — any function that needs state-specific rules | Their own slice |
+
+**The State PRO orchestrator is scoped.** When called from the PRO chain, it ONLY queries the claims handling partition — carrier obligations, deadlines, statute of limitations, appraisal rules, matching regulations, pre-suit notice requirements. It does not return licensing or bonding data to the adjuster during claim processing.
+
+**The Compliance tab queries the licensing/bonding partition.** Same state data, different door. PA licensing, business licensing, bonds, CE requirements, DOI contact info.
+
+**One state sub-agent, many consumers. Build the data once, serve it everywhere.**
 
 ---
 
@@ -21,22 +41,29 @@ This skill is under active construction. Do not treat it as complete.
 - Portal integration is stubbed — function signatures only, no implementation
 - Reciprocity data (4 fields per state) not yet populated
 - State module schema defined but only TX populated
+- Data domain partitioning (claims handling vs licensing/compliance) defined in architecture but not yet implemented in data structure
 
 **Portal tie-in:**
-This skill eventually routes to `portal.coastalclaims.net/compliance` for all state compliance data. The portal Compliance module has 798 rules across 50 states in four categories: PA Laws / Insurance / Construction / Legal. When that module is production-ready, State PRO calls into it instead of loading local JSON files. Until then, TX uses local JSON and all other states use web search mode.
+State sub-agents feed TWO portal surfaces:
+1. **Coastal AI tab** (PRO chain) — State PRO orchestrator queries claims handling data
+2. **Compliance tab** — Compliance module queries licensing/bonding data
 
-**Do not duplicate portal data. State PRO calls into the portal — it does not replace it.**
+The portal Compliance module currently has 798 rules across 50 states in four categories: PA Laws / Insurance / Construction / Legal. When the state sub-agents are fully built, they become the single source of truth for both surfaces.
+
+**Do not duplicate data between consumers. Build state data once with domain tags. Each consumer filters to its domain.**
 
 ---
 
 ## SKILL DESCRIPTION
 
-State PRO is the state compliance and carrier obligations module in the CCS claim chain. It answers two questions for any active claim file:
+State PRO is the **claims handling** interface into the CCS state sub-agent system. When called from the PRO chain, it answers two questions:
 
 1. What must the **carrier** do in this state — deadlines, obligations, consequences
-2. What must the **PA and firm** do in this state — licensing, contracts, fees, ethics, entity compliance
+2. What must the **PA** do on this claim in this state — pre-suit requirements, appraisal rules, matching regs
 
 It is not a legal advice tool. It is a compliance awareness and deadline management tool.
+
+**Scope boundary:** State PRO does NOT return licensing, bonding, CE, or business compliance data to adjusters during claim processing. That data lives in the same state sub-agent but is served through the Compliance tab, not through the PRO chain. If an adjuster asks a licensing question during a claim workflow, State PRO redirects them to the Compliance tab.
 
 ---
 
@@ -301,38 +328,78 @@ When state is not TX:
 ---
 
 ## PORTAL INTEGRATION STUB
-*Implementation pending portal.coastalclaims.net/compliance module build*
+*Implementation pending — state sub-agents serve multiple portal surfaces*
+
+### How State Sub-Agents Connect to the Portal
+
+Each state sub-agent stores data tagged by domain. Different portal consumers request different domains from the same sub-agent.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              STATE SUB-AGENT (e.g. Florida)              │
+│                                                         │
+│  ┌─────────────────────┐  ┌──────────────────────────┐  │
+│  │  CLAIMS HANDLING     │  │  LICENSING & COMPLIANCE   │  │
+│  │  ─────────────────   │  │  ──────────────────────   │  │
+│  │  Carrier deadlines   │  │  PA licensing reqs        │  │
+│  │  SOL (breach + BF)   │  │  Business licensing       │  │
+│  │  Appraisal rules     │  │  Bonds & bond amounts     │  │
+│  │  Matching regs       │  │  CE requirements          │  │
+│  │  Pre-suit notice     │  │  DOI contact info         │  │
+│  │  Prompt payment      │  │  Fee caps                 │  │
+│  │  Carrier ack window  │  │  Entity registration      │  │
+│  │  Investigation clock │  │  Staff acts (may/may not) │  │
+│  │  EUO rules           │  │  Contract requirements    │  │
+│  │  Concurrent causation│  │  Solicitation rules       │  │
+│  └──────────┬──────────┘  └─────────────┬────────────┘  │
+│             │                           │                │
+└─────────────┼───────────────────────────┼────────────────┘
+              │                           │
+     ┌────────▼────────┐        ┌────────▼──────────┐
+     │  STATE PRO       │        │  COMPLIANCE TAB    │
+     │  (PRO Chain)     │        │  (Portal)          │
+     │                  │        │                    │
+     │  Called by:       │        │  Called by:         │
+     │  - Denial PRO    │        │  - Compliance       │
+     │  - New Claim PRO │        │    officers         │
+     │  - Loss Below PRO│        │  - Managers         │
+     │  - Undisputed    │        │  - HR/onboarding    │
+     │  - SPOL PRO      │        │  - Operations       │
+     │  - 15/30/etc Day │        │                    │
+     │                  │        │  Shows:             │
+     │  Returns:         │        │  - 798 rules        │
+     │  Carrier deadlines│        │  - 50 states        │
+     │  + SOL + appraisal│        │  - PA Laws          │
+     │  + matching       │        │  - Insurance        │
+     │  + pre-suit       │        │  - Construction     │
+     │                  │        │  - Legal             │
+     └─────────────────┘        └────────────────────┘
+```
+
+### API Concept (Future)
 
 ```javascript
-// State PRO → Portal interface
-// When portal compliance module is production-ready,
-// replace local JSON loads with portal API calls
+// Unified state sub-agent API
+// Both consumers call the same endpoint, different domain filter
 
-async function getStateModule(state) {
+// PRO Chain consumer (State PRO orchestrator)
+GET /api/state/{state}?domain=claims_handling
+// Returns: carrier deadlines, SOL, appraisal, matching, pre-suit
+
+// Compliance tab consumer
+GET /api/state/{state}?domain=licensing_compliance
+// Returns: PA licensing, bonds, CE, business licensing, DOI rules
+
+// Full state dump (admin/build use only)
+GET /api/state/{state}?domain=all
+// Returns: everything
+
+async function getStateModule(state, domain) {
   if (state === "TX") {
-    // Production: load local JSON
-    const carrierObligation = await load("TX_carrier_obligations.json");
-    const paCompliance = await load("TX_pa_compliance.json");
-    return { carrierObligation, paCompliance };
+    const stateData = await load("TX_state_data.json");
+    return filterByDomain(stateData, domain);
   }
-  // All other states: web search fallback
-  return webSearchFallback(state);
-}
-
-async function getClaimMetadata(claimId) {
-  // TODO: pull from CCS CRM via portal
-  return {
-    state,
-    carrier_name,
-    policy_type,
-    policy_number,
-    loss_date,
-    claim_status,
-    litigation_indicators,
-    entity_is_foreign,
-    sos_foreign_registration_status,
-    fee_dispute
-  };
+  return webSearchFallback(state, domain);
 }
 
 async function detectSpecialTracks(metadata) {
@@ -340,23 +407,24 @@ async function detectSpecialTracks(metadata) {
   // TX_LITIGATION_TRAJECTORY
   // TX_542A_FEE_TRAP_WARNING
   // TX_SUIT_BAR_RISK
+  // These detection flags ONLY fire from the claims_handling domain
 }
-
-// Portal compliance module URL (future)
-// GET portal.coastalclaims.net/compliance/api/state/{state}
-// Returns: PA Laws / Insurance / Construction / Legal (4 categories)
-// State PRO maps: carrier_obligations → Insurance
-//                 pa_compliance → PA Laws + Legal
-//                 entity_registration → Legal
 ```
 
 ---
 
 ## OUTPUT FORMAT
 
-**For adjusters:** Carrier obligations brief + PA compliance brief
-**For managers:** Full brief + litigation flags + 542A warnings
-**For compliance:** Full brief + staff acts + entity registration risk matrix + discipline grounds
+### When called from PRO Chain (claims_handling domain)
+**For adjusters:** Carrier obligations brief — deadlines, SOL, appraisal rules, matching regs, pre-suit requirements
+**For managers:** Full claims brief + litigation flags + 542A warnings + escalation recommendations
+
+### When called from Compliance Tab (licensing_compliance domain)
+**For compliance officers:** PA licensing requirements, bonds, CE, business licensing, entity registration, staff acts, discipline grounds
+**For managers:** Full compliance brief + entity registration risk matrix + reciprocity status
+
+### Redirect Rule
+If an adjuster asks a licensing/bonding question during a claim workflow, State PRO does NOT answer it inline. Instead: "That's a compliance question — check the Compliance tab for [State] licensing requirements." Keep the claim workflow focused on the claim.
 
 ---
 
