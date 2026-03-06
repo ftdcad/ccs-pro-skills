@@ -529,7 +529,7 @@ function renderDashboard(claims) {
 <title>CCS PRO Chain \u2014 Dashboard</title>
 <link rel="stylesheet" href="/styles.css">
 <style>
-  .dashboard { max-width: 960px; margin: 40px auto; padding: 0 24px; }
+  .dashboard { max-width: 95vw; margin: 40px auto; padding: 0 32px; }
   .dashboard h2 { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-bottom: 20px; }
   .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .dash-table th {
