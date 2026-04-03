@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCS State Sub-Agent Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f1117;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 32px 80px;
+  }
+
+  .header { text-align: center; margin-bottom: 56px; }
+  .header h1 {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #374151; margin-bottom: 8px;
+  }
+  .header h2 { font-size: 20px; font-weight: 700; color: #e2e8f0; letter-spacing: -0.02em; }
+  .header h2 span { color: #60a5fa; }
+  .header p { font-size: 12px; color: #4b5563; margin-top: 6px; }
+
+  /* ── Three-column layout ── */
+  .arch {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  /* ── Left column: consumers ── */
+  .consumers {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 210px;
+    flex-shrink: 0;
+    padding-top: 60px;
+  }
+
+  .consumer-card {
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #e2e8f0;
+    border: 1.5px solid;
+    position: relative;
+  }
+  .consumer-card .c-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .consumer-card .c-title { font-size: 13px; font-weight: 700; }
+  .consumer-card .c-desc { font-size: 10px; font-weight: 500; opacity: 0.6; margin-top: 3px; line-height: 1.4; }
+
+  .c-prochain  { background: #0d1a2e; border-color: #1e3a5f; }
+  .c-prochain .c-label { color: #3b82f6; }
+
+  .c-compliance { background: #0d1f17; border-color: #14532d; }
+  .c-compliance .c-label { color: #4ade80; }
+
+  .c-talent { background: #1a0d2e; border-color: #4c1d95; }
+  .c-talent .c-label { color: #a78bfa; }
+
+  .c-plugin { background: #1a1a1a; border-color: #374151; border-style: dashed; }
+  .c-plugin .c-label { color: #6b7280; }
+  .access-badge.plugin-access { background: #111111; border-color: #374151; color: #6b7280; }
+
+  /* access scope badge */
+  .access-badge {
+    display: inline-block;
+    background: #1c1a2e;
+    border: 1px solid #4c1d95;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-top: 6px;
+  }
+  .access-badge.claims-only { background: #0d1a2e; border-color: #1e3a5f; color: #60a5fa; }
+  .access-badge.full-access { background: #0a1f12; border-color: #14532d; color: #4ade80; }
+
+  /* ── Center: connector lines ── */
+  .connectors {
+    flex: 0 0 120px;
+    position: relative;
+    align-self: stretch;
+    min-height: 600px;
+  }
+  .connectors svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* ── Right column: sub-agent panel ── */
+  .sub-panel-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .panel-header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .panel-header h3 {
+    font-size: 14px; font-weight: 700; color: #e2e8f0; letter-spacing: -0.01em;
+  }
+  .panel-header p {
+    font-size: 10px; color: #374151; margin-top: 3px;
+  }
+  .orch-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #1c1a2e; border: 1px solid #4c1d95; border-radius: 20px;
+    padding: 3px 12px; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #a78bfa;
+    margin-top: 6px;
+  }
+
+  .sub-panel {
+    background: #0d1520;
+    border: 1px solid #1e3a5f;
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+  }
+
+  /* Scope sections */
+  .scope-section {
+    margin-bottom: 16px;
+  }
+  .scope-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8.5px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .scope-label::after { content: ''; flex: 1; height: 1px; background: #1e2d3d; }
+  .scope-claims { color: #60a5fa; }
+  .scope-full   { color: #4ade80; }
+  .scope-terr   { color: #a78bfa; }
+
+  /* Capability tags under each state */
+  .states-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+  }
+  .state-chip {
+    background: #111827;
+    border: 1px solid #1e3a5f;
+    border-radius: 7px;
+    padding: 5px 4px 4px;
+    text-align: center;
+    cursor: default;
+    transition: background 0.12s;
+  }
+  .state-chip:hover { background: #1a2a3f; }
+  .state-chip .sc-name { font-size: 9.5px; font-weight: 700; color: #93c5fd; display: block; }
+  .state-chip .sc-tags { font-size: 7.5px; color: #2d4a6e; font-weight: 500; margin-top: 2px; display: block; line-height: 1.3; }
+
+  /* Territory chips */
+  .terr-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .terr-chip {
+    background: #1a1030;
+    border: 1px solid #3b1f6e;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: default;
+    transition: background 0.12s;
+  }
+  .terr-chip:hover { background: #231545; }
+  .terr-chip .tc-name { font-size: 11px; font-weight: 700; color: #c4b5fd; }
+  .terr-chip .tc-tags { font-size: 9px; color: #5b3f9e; font-weight: 500; margin-top: 3px; line-height: 1.4; }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 600; color: #4b5563;
+  }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .dot-claims  { background: #3b82f6; }
+  .dot-full    { background: #22c55e; }
+  .dot-terr    { background: #8b5cf6; }
+
+  /* Capability tag row below states grid */
+  .cap-key {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 4px; margin-bottom: 12px;
+  }
+  .cap-tag {
+    font-size: 8.5px; font-weight: 600; border-radius: 4px;
+    padding: 2px 7px; letter-spacing: 0.05em;
+  }
+  .cap-claims { background: #0d1a2e; color: #60a5fa; border: 1px solid #1e3a5f; }
+  .cap-license { background: #0d1f17; color: #4ade80; border: 1px solid #14532d; }
+  .cap-business { background: #1a0d2e; color: #a78bfa; border: 1px solid #4c1d95; }
+  .cap-talent { background: #1f1505; color: #fb923c; border: 1px solid #7c2d12; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Coastal Claims Services — System Architecture</h1>
+  <h2>State Sub-Agents: <span>Shared Infrastructure</span></h2>
+  <p>One set of sub-agents. Three consumers. Each accesses only what it needs.</p>
+</div>
+
+<div class="arch">
+
+  <!-- ── Left: Consumer systems ── -->
+  <div class="consumers">
+
+    <div class="consumer-card c-prochain">
+      <div class="c-label">PRO Chain</div>
+      <div class="c-title">State PRO</div>
+      <div class="c-desc">Orchestrator · Deadlines, SOL, appraisal, matching, DOI</div>
+      <div class="access-badge claims-only">Claims Handling Only</div>
+    </div>
+
+    <div class="consumer-card c-compliance">
+      <div class="c-label">Portal Tab</div>
+      <div class="c-title">Compliance</div>
+      <div class="c-desc">Licensing, bonding, adjuster registration, business rules</div>
+      <div class="access-badge full-access">Full Access</div>
+    </div>
+
+    <div class="consumer-card c-talent">
+      <div class="c-label">Portal Tab</div>
+      <div class="c-title">Talent Partner Network</div>
+      <div class="c-desc">Agent onboarding requirements, state registrations, CE requirements</div>
+      <div class="access-badge full-access">Full Access</div>
+    </div>
+
+    <div class="consumer-card c-plugin">
+      <div class="c-label">Future</div>
+      <div class="c-title">Other Department Plug-Ins</div>
+      <div class="c-desc">Any CCS portal module can tap the shared state sub-agent layer on demand</div>
+      <div class="access-badge plugin-access">Scoped Per Module</div>
+    </div>
+
+  </div>
+
+  <!-- ── Center: SVG connector lines ── -->
+  <div class="connectors">
+    <svg viewBox="0 0 120 600" preserveAspectRatio="none">
+      <!-- PRO Chain line (blue) — to claims section ~top -->
+      <path d="M 0 95 C 60 95, 60 180, 120 180" stroke="#3b82f6" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <polygon points="115,176 123,180 115,184" fill="#3b82f6"/>
+
+      <!-- Compliance line (green) — to full section middle -->
+      <path d="M 0 270 C 60 270, 60 340, 120 340" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <polygon points="115,336 123,340 115,344" fill="#22c55e"/>
+
+      <!-- Talent line (purple) — to territory section bottom -->
+      <path d="M 0 430 C 60 430, 60 500, 120 500" stroke="#8b5cf6" stroke-width="1.5" fill="none" stroke-dasharray="5,3"/>
+      <polygon points="115,496 123,500 115,504" fill="#8b5cf6"/>
+    </svg>
+  </div>
+
+  <!-- ── Right: Sub-agent panel ── -->
+  <div class="sub-panel-wrap">
+    <div class="panel-header">
+      <h3>State Sub-Agents</h3>
+      <p>Shared across PRO Chain · Compliance · Talent Partner Network</p>
+      <div class="orch-badge">🚦 Orchestrator Routes by Consumer</div>
+    </div>
+
+    <div class="sub-panel">
+
+      <!-- Capability key -->
+      <div class="cap-key">
+        <span class="cap-tag cap-claims">Claims Handling</span>
+        <span class="cap-tag cap-license">Licensing &amp; Bonding</span>
+        <span class="cap-tag cap-business">Business Registration</span>
+        <span class="cap-tag cap-talent">CE &amp; Agent Requirements</span>
+      </div>
+
+      <!-- Claims scope label -->
+      <div class="scope-section">
+        <div class="scope-label scope-claims">Claims Handling Scope — accessed by State PRO only</div>
+        <div class="states-grid">
+          <div class="state-chip"><span class="sc-name">Alabama</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Alaska</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Arizona</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Arkansas</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">California</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Colorado</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Connecticut</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Delaware</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Florida</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Georgia</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Hawaii</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Idaho</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Illinois</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Indiana</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Iowa</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Kansas</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Kentucky</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Louisiana</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Maine</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Maryland</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Massachusetts</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Michigan</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Minnesota</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Mississippi</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Missouri</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Montana</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Nebraska</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Nevada</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">New Hampshire</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">New Jersey</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">New Mexico</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">New York</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">North Carolina</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">North Dakota</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Ohio</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Oklahoma</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Oregon</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Pennsylvania</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Rhode Island</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">South Carolina</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">South Dakota</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Tennessee</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Texas</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Utah</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Vermont</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Virginia</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Washington</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">West Virginia</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Wisconsin</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+          <div class="state-chip"><span class="sc-name">Wyoming</span><span class="sc-tags">Claims · SOL · DOI</span></div>
+        </div>
+      </div>
+
+      <!-- Full scope label -->
+      <div class="scope-section">
+        <div class="scope-label scope-full">Full Scope — Compliance &amp; Talent Partner Network</div>
+        <div style="background:#0a1810;border:1px solid #14532d;border-radius:10px;padding:12px 14px;font-size:10px;color:#4b7a5a;line-height:1.7;">
+          Each state sub-agent also carries: &nbsp;
+          <span style="color:#4ade80;font-weight:600;">Adjuster Licensing &amp; Bonding</span> &nbsp;·&nbsp;
+          <span style="color:#4ade80;font-weight:600;">Business Registration</span> &nbsp;·&nbsp;
+          <span style="color:#4ade80;font-weight:600;">How to Open CCS in This State</span> &nbsp;·&nbsp;
+          <span style="color:#4ade80;font-weight:600;">Agent CE Requirements</span> &nbsp;·&nbsp;
+          <span style="color:#4ade80;font-weight:600;">Talent Onboarding Rules</span>
+          <br><br>
+          <span style="color:#374151;">State PRO (claims orchestrator) is scoped to claims-handling data only. Compliance and Talent Partner Network consume the full sub-agent. Same data source — different access lens.</span>
+        </div>
+      </div>
+
+      <!-- Territories -->
+      <div class="scope-section" style="margin-bottom:0;">
+        <div class="scope-label scope-terr">U.S. Territories</div>
+        <div class="terr-grid">
+          <div class="terr-chip">
+            <div class="tc-name">U.S. Virgin Islands</div>
+            <div class="tc-tags">Claims · Licensing · Business Reg · Talent</div>
+          </div>
+          <div class="terr-chip">
+            <div class="tc-name">Puerto Rico</div>
+            <div class="tc-tags">Claims · Licensing · Business Reg · Talent</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sub-panel -->
+  </div><!-- /sub-panel-wrap -->
+
+</div><!-- /arch -->
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-claims"></div> State PRO — Claims Handling Only</div>
+  <div class="legend-item"><div class="legend-dot dot-full"></div> Compliance Tab — Full Access</div>
+  <div class="legend-item"><div class="legend-dot dot-terr"></div> Talent Partner Network — Full Access</div>
+</div>
+
+</body>
+</html>

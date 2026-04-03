@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCS PRO Chain — 01-000125628 Armstrong</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="topbar-logo">COASTAL CLAIMS <span>SERVICES</span></div>
+  <div class="topbar-claim">PRO CHAIN &nbsp;·&nbsp; 01-000125628 &nbsp;·&nbsp; Armstrong</div>
+</div>
+
+<!-- ══ CLAIM IDENTITY STRIP — prints once, never repeats ══ -->
+<div class="claim-strip">
+  <div class="claim-field"><label>Insured</label><value>Dale Armstrong</value></div>
+  <div class="claim-field"><label>Property</label><value>836 E 20th Ave, NSB FL 32168</value></div>
+  <div class="claim-field"><label>Carrier</label><value>Frontline / First Protective Ins. Co.</value></div>
+  <div class="claim-field"><label>Policy #</label><value>7756322514</value></div>
+  <div class="claim-field"><label>Claim #</label><value>01-000125628</value></div>
+  <div class="claim-field"><label>Date of Loss</label><value>10/10/2024 — Hurricane Milton</value></div>
+  <div class="claim-field"><label>Policy Type</label><value>Dwelling Fire (DP 00 03)</value></div>
+  <div class="claim-field"><label>File Status</label><value>CTG — Supplemental</value></div>
+</div>
+
+<!-- ══ TOOLBAR ══ -->
+<div class="toolbar">
+  <button class="btn" onclick="expandAll()">Expand All</button>
+  <button class="btn" onclick="collapseAll()">Collapse All</button>
+  <span class="toolbar-label">Click any section header to expand / collapse</span>
+</div>
+
+<!-- ══ PRO CHAIN ══ -->
+<div class="chain">
+
+  <!-- POLICY PRO -->
+  <div class="pro-section" id="sec-policy" data-status="complete">
+    <div class="pro-header theme-policy" onclick="toggle('sec-policy')">
+      <div class="pro-header-left">
+        <span class="pro-badge badge-policy">Policy PRO</span>
+        <div>
+          <div class="pro-title">Policy Analysis</div>
+          <div class="pro-subtitle">Coverage · Deductibles · Endorsements · Gaps</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-complete">Complete</span>
+        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="pro-body">
+
+      <div class="section-label">Coverage Limits</div>
+      <div class="info-grid cols-4">
+        <div class="info-cell"><label>Coverage A — Dwelling</label><value>$269,080</value></div>
+        <div class="info-cell"><label>Coverage B — Other Structures</label><value>$26,908</value></div>
+        <div class="info-cell"><label>Coverage C — Personal Property</label><value>$6,727</value></div>
+        <div class="info-cell"><label>Coverage D — Fair Rental Value</label><value>$26,908</value></div>
+        <div class="info-cell"><label>Hurricane Deductible</label><value class="highlight">2% Cov A = $5,382</value></div>
+        <div class="info-cell"><label>AOP Deductible</label><value>$2,500</value></div>
+        <div class="info-cell"><label>Loss Settlement</label><value>Replacement Cost (A, B, C)</value></div>
+        <div class="info-cell"><label>Appraisal Clause</label><value>✓ Present — DP 00 03 07 88</value></div>
+      </div>
+
+      <div class="section-label">Property Underwriting</div>
+      <div class="info-grid cols-4">
+        <div class="info-cell"><label>Year Built</label><value>1985</value></div>
+        <div class="info-cell"><label>Sq Footage</label><value>990 SF</value></div>
+        <div class="info-cell"><label>Roof Year</label><value>2006 (18 yrs at DOL)</value></div>
+        <div class="info-cell"><label>Roof Type</label><value>Architectural</value></div>
+        <div class="info-cell"><label>Construction</label><value>Masonry</value></div>
+        <div class="info-cell"><label>Occupancy</label><value class="warn">Tenant Occupied ⚠</value></div>
+        <div class="info-cell"><label>County / Territory</label><value>Volusia — 062</value></div>
+        <div class="info-cell"><label>Policy Period</label><value>07/09/2024 – 07/09/2025</value></div>
+      </div>
+
+      <div class="section-label">Mortgagees / Additional Interests</div>
+      <div class="info-grid cols-3">
+        <div class="info-cell"><label>1st Mortgage</label><value>PNWBX LLC · Loan #579767923 · Escrowed</value></div>
+        <div class="info-cell"><label>2nd Mortgage</label><value>Loan #00000083486960 · Not Escrowed · Name not on DEC</value></div>
+        <div class="info-cell"><label>Additional Interest</label><value>USA Federal Savings Bank ISAOA/ATIMA · Fort Worth TX</value></div>
+      </div>
+
+      <div class="section-label">Critical Flags</div>
+      <div class="flag flag-red">🚨 <strong>OCCUPANCY CONFLICT</strong> — Property is Tenant Occupied per underwriting, but policy carries endorsement <strong>DL 24 16 07 88 — "No Coverage for Non-Owner Occupied Dwellings."</strong> PA and management review required before strategy. Carrier will likely use this as a denial basis.</div>
+      <div class="flag flag-red">🚨 <strong>CALENDAR YEAR HURRICANE DEDUCTIBLE (DP 03 51 05 23)</strong> — Supplemental reporting requirement applies in Florida. Confirm whether any prior 2024 hurricane claim was filed. If already satisfied, deductible may be $0. If not, full <strong>$5,382</strong> applies.</div>
+      <div class="flag flag-yellow">⚠ <strong>EXISTING DAMAGE EXCLUSION (FIM 00 30 03 07)</strong> — Carrier will attempt to attribute roof wear on an 18-year-old roof to this endorsement. Photo documentation of storm-specific damage is critical.</div>
+      <div class="flag flag-yellow">⚠ <strong>COSMETIC/AESTHETIC DAMAGE TO FLOORS (FIM 00 34 06 13)</strong> — Floor damage that is purely cosmetic may be excluded. Confirm functional damage if floors are added to scope.</div>
+      <div class="flag flag-yellow">⚠ <strong>SCREEN ENCLOSURE HURRICANE LIMITATION (FIM 00 18 12 23)</strong> — Verify at inspection whether a screen enclosure is present. Coverage limited if so.</div>
+      <div class="flag flag-blue">ℹ <strong>ROOF AGE</strong> — 2006 roof, 18 years at date of loss. Depreciation applies. No roof payment schedule endorsement confirmed — carrier is on RCV basis per FIM DP 66 01 16.</div>
+
+      <div class="section-label">Endorsements</div>
+      <ul class="endorse-list">
+        <li class="critical">No Coverage for Non-Owner Occupied Dwellings (DL 24 16 07 88) 🚨</li>
+        <li class="warn">Calendar Year Hurricane Deductible w/ Supplemental Reporting (DP 03 51 05 23)</li>
+        <li class="warn">Existing Damage Exclusion (FIM 00 30 03 07)</li>
+        <li class="warn">Screen Enclosure Hurricane Limitation (FIM 00 18 12 23)</li>
+        <li class="warn">Cosmetic & Aesthetic Damage to Floors Limitation (FIM 00 34 06 13)</li>
+        <li>Limited Fungi / Wet or Dry Rot / Bacteria Coverage (FIM 00 11 06 07)</li>
+        <li>Decision Property Replacement Cost (FIM DP 66 01 16)</li>
+        <li>Water Back Up and Sump Overflow (FIM DP 95 01 16)</li>
+        <li>Personal Liability (DL 24 01 07 88)</li>
+        <li>Premises Liability — Owner Occupied Dwelling (DL 24 11 07 88)</li>
+        <li>Animal Liability Exclusion (FIM 04 01 06 03)</li>
+        <li>Catastrophic Ground Cover Collapse (FIM 00 39 10 11)</li>
+        <li>Sinkhole Exclusion — Florida (FIM SEN 01 12)</li>
+        <li>No Coverage — Tree Roots / Organic Debris (FIM 00 50 10 15)</li>
+        <li>Special Provisions Liability Florida (FIM FL DL 22 12 16)</li>
+      </ul>
+
+      <div class="section-label">Missing — Required for Full Review</div>
+      <ul class="missing-list">
+        <li>Full policy jacket — Duties After Loss, EUO, Suit Against Us</li>
+        <li>Full text of all listed endorsements — especially DL 24 16 07 88</li>
+        <li>2nd Mortgage holder name — not on DEC page</li>
+        <li>Matching endorsement status — not confirmed</li>
+        <li>Confirmation of prior 2024 hurricane claims — calendar year deductible check</li>
+      </ul>
+
+      <div class="handoff">
+        <strong>Hands off to → Scope PRO</strong><br>
+        Hurricane deductible confirmed: $5,382. Occupancy conflict flagged — PA review required before Strategy PRO. All coverage data carried forward. No re-entry needed downstream.
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- SCOPE PRO -->
+  <div class="pro-section" id="sec-scope" data-status="complete">
+    <div class="pro-header theme-scope" onclick="toggle('sec-scope')">
+      <div class="pro-header-left">
+        <span class="pro-badge badge-scope">Scope PRO</span>
+        <div>
+          <div class="pro-title">Scope of Loss</div>
+          <div class="pro-subtitle">75 photos analyzed · No EagleView · Hip roof · Hurricane Milton</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-complete">Complete</span>
+        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="pro-body">
+
+      <div class="section-label">Roof Measurements</div>
+      <div class="info-grid cols-3">
+        <div class="info-cell"><label>Net Area</label><value>23.42 SQ (2,342 SF)</value></div>
+        <div class="info-cell"><label>Recommended SQ</label><value class="highlight">26.93 SQ (23.42 + 15% hip waste)</value></div>
+        <div class="info-cell"><label>Pitch</label><value>5/12</value></div>
+        <div class="info-cell"><label>Configuration</label><value>Hip — 4 facets</value></div>
+        <div class="info-cell"><label>Ridge</label><value>32.33 LF</value></div>
+        <div class="info-cell"><label>Perimeter / Gutters</label><value>~199 LF</value></div>
+      </div>
+
+      <div class="section-label">Roof & Exterior Scope</div>
+      <table class="scope-table">
+        <thead><tr><th>Item</th><th>Description</th><th style="text-align:center;">Qty</th></tr></thead>
+        <tbody>
+          <tr><td class="item">Shingle Replacement</td><td>Full roof — 25 chalk hits: F(11) R(5) B(5) L(4). Arch. asphalt. No EagleView — 15% hip waste applied.</td><td class="qty">26.93 SQ</td></tr>
+          <tr><td class="item">Aluminum Ridge Vent</td><td>Continuous — photos #13, #14. R&R with roof.</td><td class="qty">Per LF</td></tr>
+          <tr><td class="item">Turtle Vent</td><td>1 unit — photos #13, #18. R&R with roof.</td><td class="qty">1 EA</td></tr>
+          <tr><td class="item">Pipe Jacks</td><td>4 units — chalk annotation confirmed — photos #14–#19.</td><td class="qty">4 EA</td></tr>
+          <tr><td class="item">Electric Mast Boot</td><td>Weatherhead / service mast — photo #29. R&R with roof.</td><td class="qty">1 EA</td></tr>
+          <tr><td class="item">Gutters — Aluminum</td><td>White aluminum, full perimeter — photos #3–#11. R&R.</td><td class="qty">~199 LF</td></tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Interior — Ensuing Loss</div>
+      <table class="scope-table">
+        <thead><tr><th>Room</th><th>Scope Items</th><th style="text-align:center;">SF</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="item">Bedroom 3</td>
+            <td>Water stain ring — photo #75<br>
+              · R&R drywall ceiling <em style="color:#94a3b8;">(verify drywall vs. plaster in field)</em><br>
+              · R&R attic insulation (same SF)<br>
+              · Texture ceiling — full room<br>
+              · Paint ceiling — full room</td>
+            <td class="qty">Field measure</td>
+          </tr>
+          <tr>
+            <td class="item">Master Bedroom</td>
+            <td>Ceiling staining — photos #50–#52<br>
+              · R&R drywall ceiling <em style="color:#94a3b8;">(verify drywall vs. plaster in field)</em><br>
+              · R&R attic insulation (same SF)<br>
+              · Texture ceiling — full room<br>
+              · Paint ceiling — full room</td>
+            <td class="qty">Field measure</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="section-label">Severity & Assessment</div>
+      <div class="severity-badge">Severity 2 — Light/Moderate | Habitable</div>
+      <div class="flag flag-green">✓ Functional damage confirmed — 25 documented impacts across all 4 slopes. Hurricane Milton 10/10/2024.</div>
+      <div class="flag flag-green">✓ Above deductible — Hurricane deductible $5,382 confirmed. Scope supports recovery above threshold.</div>
+      <div class="flag flag-red">🚨 PA REVIEW REQUIRED — Occupancy conflict from Policy PRO must be resolved before strategy. Carrier has DL 24 16 07 88 on file.</div>
+      <div class="flag flag-yellow">⚠ Drywall vs. plaster not confirmed — verify in field before estimating interior.</div>
+      <div class="flag flag-yellow">⚠ Moisture testing recommended — Bedroom 3 prior to estimate finalization.</div>
+
+      <div class="section-label">Notes</div>
+      <div class="notes-text">
+        · Back porch metal roof — present, no damage observed.<br>
+        · 75 photos analyzed.<br>
+        · No screen enclosure visible — Screen Enclosure Limitation likely not triggered.<br>
+        · No floor damage observed — Cosmetic Floors endorsement not triggered.
+      </div>
+
+      <div class="handoff">
+        <strong>Hands off to → Estimating</strong><br>
+        26.93 SQ recommended. 2 interior rooms need field SF. Drywall/plaster confirmation needed before pricing interior. PA must resolve occupancy conflict before Strategy PRO proceeds.
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- ESTIMATING -->
+  <div class="pro-section" id="sec-estimating" data-status="active">
+    <div class="pro-header theme-estimating" onclick="toggle('sec-estimating')">
+      <div class="pro-header-left">
+        <span class="pro-badge badge-estimating">Estimating</span>
+        <div>
+          <div class="pro-title">Xactimate Estimate</div>
+          <div class="pro-subtitle">Line-item pricing · RCV / ACV · O&P</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-active">In Progress</span>
+        <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+    </div>
+    <div class="pro-body">
+      <div style="font-size:13px;color:#94a3b8;font-style:italic;">Xactimate estimate in progress — RCV/ACV totals will populate here when complete.</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- CLAIMS STRATEGY PRO -->
+  <div class="pro-section placeholder" id="sec-strategy" data-status="pending">
+    <div class="pro-header theme-strategy">
+      <div class="pro-header-left">
+        <span class="pro-badge badge-strategy">Strategy PRO</span>
+        <div>
+          <div class="pro-title">Claims Strategy</div>
+          <div class="pro-subtitle">Pending estimate completion</div>
+        </div>
+      </div>
+      <div class="pro-header-right">
+        <span class="status-pill status-pending">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- STRATEGY BRANCHES -->
+  <div class="branch-row">
+    <div class="pro-section placeholder" id="sec-denial" data-status="pending">
+      <div class="pro-header theme-denial">
+        <div class="pro-header-left">
+          <span class="pro-badge badge-denial">Denial PRO</span>
+        </div>
+        <span class="status-pill status-pending">Pending</span>
+      </div>
+    </div>
+    <div class="pro-section placeholder" id="sec-newclaim" data-status="pending">
+      <div class="pro-header theme-newclaim">
+        <div class="pro-header-left">
+          <span class="pro-badge badge-newclaim">NEW Claim PRO</span>
+        </div>
+        <span class="status-pill status-pending">Pending</span>
+      </div>
+    </div>
+    <div class="pro-section placeholder" id="sec-lossbelow" data-status="pending">
+      <div class="pro-header theme-lossbelow">
+        <div class="pro-header-left">
+          <span class="pro-badge badge-lossbelow">Loss Below PRO</span>
+        </div>
+        <span class="status-pill status-pending">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-line"></div></div>
+
+  <!-- REMAINING PROS — pending trail -->
+  <div class="pending-trail">
+    UnDisputed Funds PRO &nbsp;·&nbsp; SPOL PRO &nbsp;·&nbsp; 15 Day PRO &nbsp;·&nbsp; Formal Demand PRO &nbsp;·&nbsp; 30 Day PRO<br>
+    45 Day PRO &nbsp;·&nbsp; Peer Review &nbsp;·&nbsp; 60 Day PRO &nbsp;·&nbsp; 75 Day PRO &nbsp;·&nbsp; Peer Review &nbsp;·&nbsp; 90 Day PRO
+  </div>
+
+</div><!-- end .chain -->
+
+<script src="chain.js"></script>
+</body>
+</html>
